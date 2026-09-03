@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spionase Kelompok 3 - Portal Berita & Artikel Terkini</title>
+  <!-- External CSS -->
+  <link rel="stylesheet" href="style.css">
+  <!-- Supabase JS Client Library via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Supabase Configuration -->
+  <script src="supabase-config.js"></script>
+</head>
+<body>
+
+  <!-- ================= Header & Interactive Navigation ================= -->
+  <header class="header">
+    <div class="container header-container">
+      <a href="index.html" class="logo">
+        <svg class="logo-icon" viewBox="0 0 24 24">
+          <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM11 19.93C7.05 19.43 4 16.05 4 12C4 7.95 7.05 4.57 11 4.07V19.93ZM13 4.07C16.95 4.57 20 7.95 20 12C20 16.05 16.95 19.43 13 19.93V4.07Z"/>
+        </svg>
+        <span>Spionase <span class="logo-accent">Kelompok 3</span></span>
+      </a>
+
+      <!-- Interactive Functional Navigation -->
+      <nav class="nav-links">
+        <!-- Kategori Dropdown -->
+        <div class="nav-item-dropdown">
+          <button type="button" class="nav-link">
+            Kategori
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="nav-dropdown-menu">
+            <button type="button" class="dropdown-link-item" onclick="applyCategoryFilter('TEKNOLOGI')">🤖 Teknologi & AI</button>
+            <button type="button" class="dropdown-link-item" onclick="applyCategoryFilter('SAINS')">🔭 Sains & Antariksa</button>
+            <button type="button" class="dropdown-link-item" onclick="applyCategoryFilter('KEAMANAN SIBER')">🛡️ Keamanan Siber</button>
+            <button type="button" class="dropdown-link-item" onclick="applyCategoryFilter('SOFTWARE ENGINEERING')">💻 Software & Web</button>
+            <button type="button" class="dropdown-link-item" onclick="applyCategoryFilter('INOVASI KOTA')">🏙️ Smart City & IoT</button>
+            <button type="button" class="dropdown-link-item" onclick="applyCategoryFilter('BIOTEKNOLOGI')">🧬 Bioteknologi Medis</button>
+          </div>
+        </div>
+
+        <!-- Topik Pilihan Dropdown -->
+        <div class="nav-item-dropdown">
+          <button type="button" class="nav-link">
+            Topik Pilihan
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="nav-dropdown-menu">
+            <button type="button" class="dropdown-link-item" onclick="showTopic('popular')">🔥 Artikel Populer</button>
+            <button type="button" class="dropdown-link-item" onclick="showTopic('latest')">⚡ Artikel Terbaru</button>
+            <button type="button" class="dropdown-link-item" onclick="applyCategoryFilter('ALL')">📑 Semua Kategori</button>
+          </div>
+        </div>
+
+        <button type="button" class="nav-link" onclick="showTopic('popular')">Populer</button>
+        <button type="button" class="nav-link" onclick="showTopic('latest')">Terbaru</button>
+        <a href="#newsletter" class="nav-link">Newsletter</a>
+      </nav>
+
+      <div class="header-auth">
+        <a href="auth.html?mode=signin" class="btn-sign-in">Sign In</a>
+        <a href="auth.html?mode=signup" class="btn-sign-up">Sign Up</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= Hero Section ================= -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <h1 class="hero-title">Eksplorasi Informasi Terkini, Teknologi Digital, dan Perkembangan Sains Global</h1>
+        <div class="hero-search-wrapper">
+          <form class="search-box" onsubmit="handleSearchSubmit(event)">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="mainSearchInput" placeholder="Cari artikel berita, teknologi, tren..." oninput="handleLiveSearch(this.value)">
+            <button type="submit" class="btn-search">
+              <span>Cari</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <a href="#articleFeedArea" class="hero-explore" onclick="scrollToArticles(event)">
+      <span>Jelajahi Berita</span>
+      <div class="arrow-circle">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <polyline points="19 12 12 19 5 12"></polyline>
+        </svg>
+      </div>
+    </a>
+  </section>
+
+  <!-- ================= Interactive Category Filter Pill Bar ================= -->
+  <div class="category-filter-section" id="articleFeedArea">
+    <div class="container category-filter-container">
+      <div class="category-filter-pills">
+        <button type="button" class="filter-pill active" onclick="applyCategoryFilter('ALL', this)">Semua Berita</button>
+        <button type="button" class="filter-pill" onclick="applyCategoryFilter('TEKNOLOGI', this)">Teknologi & AI</button>
+        <button type="button" class="filter-pill" onclick="applyCategoryFilter('SAINS', this)">Sains & Antariksa</button>
+        <button type="button" class="filter-pill" onclick="applyCategoryFilter('KEAMANAN SIBER', this)">Keamanan Siber</button>
+        <button type="button" class="filter-pill" onclick="applyCategoryFilter('SOFTWARE ENGINEERING', this)">Software & Web</button>
+        <button type="button" class="filter-pill" onclick="applyCategoryFilter('INOVASI KOTA', this)">Smart City</button>
+        <button type="button" class="filter-pill" onclick="applyCategoryFilter('BIOTEKNOLOGI', this)">Bioteknologi</button>
+      </div>
+
+      <div class="filter-status-text" id="filterStatusLabel">
+        Menampilkan: <strong>Semua Artikel (10)</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= Popular Articles Section ================= -->
+  <section class="section" id="popularSection">
+    <div class="container">
+      <h2 class="section-title" id="popularTitle">Artikel Populer</h2>
+      
+      <div class="popular-grid" id="popularGrid">
+        <!-- Main Featured Article -->
+        <a href="article.html?id=1" class="article-link article-item" data-category="TEKNOLOGI" data-title="Perkembangan Kecerdasan Buatan dan Dampaknya Terhadap Masa Depan Industri Digital">
+          <article class="featured-card">
+            <div class="featured-img-wrap">
+              <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=80" alt="Perkembangan AI dan Masa Depan Digital">
+            </div>
+            <span class="article-date">TEKNOLOGI • 23 OKTOBER 2026</span>
+            <h3 class="featured-title">Perkembangan Kecerdasan Buatan dan Dampaknya Terhadap Masa Depan Industri Digital.</h3>
+            <p class="featured-desc">Bagaimana integrasi teknologi AI generasi terbaru mampu merevolusi efisiensi operasional, analisis data skala besar, dan membuka peluang karier baru di ranah teknologi modern.</p>
+          </article>
+        </a>
+
+        <!-- Side Stacked Articles -->
+        <div class="side-articles-list">
+          <a href="article.html?id=2" class="article-link article-item" data-category="SAINS" data-title="Teleskop Luar Angkasa Generasi Baru Temukan Gugusan Bintang Misterius">
+            <article class="side-card">
+              <div class="side-img-wrap">
+                <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=400&q=80" alt="Eksplorasi Antariksa">
+              </div>
+              <div class="side-content">
+                <span class="article-date">SAINS • 23 OKTOBER 2026</span>
+                <h4 class="side-title">Teleskop Luar Angkasa Generasi Baru Temukan Gugusan Bintang Misterius.</h4>
+              </div>
+            </article>
+          </a>
+
+          <a href="article.html?id=3" class="article-link article-item" data-category="KEAMANAN SIBER" data-title="Langkah Strategis Memperkuat Pertahanan Keamanan Data Digital di Era Cloud">
+            <article class="side-card">
+              <div class="side-img-wrap">
+                <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=400&q=80" alt="Keamanan Siber">
+              </div>
+              <div class="side-content">
+                <span class="article-date">KEAMANAN SIBER • 23 OKTOBER 2026</span>
+                <h4 class="side-title">Langkah Strategis Memperkuat Pertahanan Keamanan Data Digital di Era Cloud.</h4>
+              </div>
+            </article>
+          </a>
+
+          <a href="article.html?id=4" class="article-link article-item" data-category="SOFTWARE ENGINEERING" data-title="Framework Web Terpopuler yang Wajib Dipelajari Pengembang Saat Ini">
+            <article class="side-card">
+              <div class="side-img-wrap">
+                <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=400&q=80" alt="Pemrograman Modern">
+              </div>
+              <div class="side-content">
+                <span class="article-date">SOFTWARE ENGINEERING • 23 OKTOBER 2026</span>
+                <h4 class="side-title">Framework Web Terpopuler yang Wajib Dipelajari Pengembang Saat Ini.</h4>
+              </div>
+            </article>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Latest Articles Section ================= -->
+  <section class="section latest-section" id="latestSection">
+    <div class="container">
+      <h2 class="section-title" id="latestTitle">Artikel Terbaru</h2>
+
+      <div class="latest-grid" id="latestGrid">
+        <!-- Card 1 -->
+        <a href="article.html?id=5" class="article-link article-item" data-category="INOVASI KOTA" data-title="Penerapan Internet of Things IoT dalam Mewujudkan Konsep Smart City Modern">
+          <article class="latest-card">
+            <div class="latest-img-wrap">
+              <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=600&q=80" alt="Smart City IoT">
+            </div>
+            <span class="article-date">INOVASI KOTA • 23 OKTOBER 2026</span>
+            <h4 class="latest-title">Penerapan Internet of Things (IoT) dalam Mewujudkan Konsep Smart City Modern.</h4>
+            <p class="latest-desc">Pemanfaatan sensor pintar dan otomatisasi untuk tata kelola lalu lintas, hemat energi, serta pelayanan publik terpadu.</p>
+          </article>
+        </a>
+
+        <!-- Card 2 -->
+        <a href="article.html?id=6" class="article-link article-item" data-category="DESAIN & PRODUK" data-title="Prinsip Desain UI UX yang Meningkatkan Retensi dan Kenyamanan Pengguna">
+          <article class="latest-card">
+            <div class="latest-img-wrap">
+              <img src="https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=600&q=80" alt="UI/UX Modern">
+            </div>
+            <span class="article-date">DESAIN & PRODUK • 23 OKTOBER 2026</span>
+            <h4 class="latest-title">Prinsip Desain UI/UX yang Meningkatkan Retensi dan Kenyamanan Pengguna.</h4>
+            <p class="latest-desc">Menyelami teknik navigasi intuitif, mikro-interaksi, dan aksesibilitas ramah pengguna pada aplikasi masa kini.</p>
+          </article>
+        </a>
+
+        <!-- Card 3 -->
+        <a href="article.html?id=7" class="article-link article-item" data-category="EKONOMI DIGITAL" data-title="Peluang dan Tantangan Startup Teknologi dalam Ekosistem Bisnis Global">
+          <article class="latest-card">
+            <div class="latest-img-wrap">
+              <img src="https://images.unsplash.com/photo-1579546929518-9e396f3cc809?auto=format&fit=crop&w=600&q=80" alt="Ekonomi Digital">
+            </div>
+            <span class="article-date">EKONOMI DIGITAL • 23 OKTOBER 2026</span>
+            <h4 class="latest-title">Peluang dan Tantangan Startup Teknologi dalam Ekosistem Bisnis Global.</h4>
+            <p class="latest-desc">Analisis faktor keberhasilan model bisnis berkelanjutan bagi para pendiri perusahaan rintisan digital.</p>
+          </article>
+        </a>
+
+        <!-- Card 4 -->
+        <a href="article.html?id=8" class="article-link article-item" data-category="BIOTEKNOLOGI" data-title="Inovasi Bioteknologi Medis dalam Percepatan Deteksi Penyakit Kronis">
+          <article class="latest-card">
+            <div class="latest-img-wrap">
+              <img src="https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=600&q=80" alt="Riset Medis">
+            </div>
+            <span class="article-date">BIOTEKNOLOGI • 23 OKTOBER 2026</span>
+            <h4 class="latest-title">Inovasi Bioteknologi Medis dalam Percepatan Deteksi Penyakit Kronis.</h4>
+            <p class="latest-desc">Penggunaan algoritma deep learning dalam mendiagnosis citra medis dengan tingkat akurasi tinggi.</p>
+          </article>
+        </a>
+
+        <!-- Card 5 -->
+        <a href="article.html?id=9" class="article-link article-item" data-category="CLOUD COMPUTING" data-title="Membangun Arsitektur Microservices yang Tangguh dan Efisien Biaya">
+          <article class="latest-card">
+            <div class="latest-img-wrap">
+              <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=600&q=80" alt="Cloud Architecture">
+            </div>
+            <span class="article-date">CLOUD COMPUTING • 23 OKTOBER 2026</span>
+            <h4 class="latest-title">Membangun Arsitektur Microservices yang Tangguh dan Efisien Biaya.</h4>
+            <p class="latest-desc">Strategi penerapan containerization, continuous deployment, dan monitoring performa server secara terpusat.</p>
+          </article>
+        </a>
+
+        <!-- Card 6 -->
+        <a href="article.html?id=10" class="article-link article-item" data-category="RISET MASA DEPAN" data-title="Komputasi Kuantum Menuju Lompatan Besar Pengolahan Data Kompleks">
+          <article class="latest-card">
+            <div class="latest-img-wrap">
+              <img src="https://images.unsplash.com/photo-1507668077129-56e32842fceb?auto=format&fit=crop&w=600&q=80" alt="Evolusi Komputasi">
+            </div>
+            <span class="article-date">RISET MASA DEPAN • 23 OKTOBER 2026</span>
+            <h4 class="latest-title">Komputasi Kuantum: Menuju Lompatan Besar Pengolahan Data Kompleks.</h4>
+            <p class="latest-desc">Bagaimana riset komputasi berbasis qubit mulai memasuki ranah simulasi molekuler dan kriptografi canggih.</p>
+          </article>
+        </a>
+      </div>
+
+      <!-- Zero search results container -->
+      <div id="noResultsBox" class="empty-state-box" style="display: none;">
+        <h3>🔍 Artikel Tidak Ditemukan</h3>
+        <p>Coba gunakan kata kunci lain atau pilih kategori "Semua Berita" untuk melihat seluruh artikel.</p>
+      </div>
+
+      <!-- Pagination Controls -->
+      <div class="pagination-wrapper" id="paginationBox">
+        <button class="page-nav-btn" type="button" onclick="alert('Anda berada di halaman pertama.')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Sebelumnya</span>
+        </button>
+
+        <div class="page-numbers">
+          <span class="page-num active">1</span>
+          <span class="page-num">2</span>
+          <span class="page-num">3</span>
+          <span class="page-num dots">...</span>
+        </div>
+
+        <button class="page-nav-btn" type="button" onclick="alert('Semua 10 artikel sedang ditampilkan.')">
+          <span>Selanjutnya</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CTA Section ================= -->
+  <section class="cta-banner" id="newsletter">
+    <div class="container">
+      <h2 class="cta-title">Dapatkan Rangkuman Berita<br>& Artikel Terkini Setiap Hari</h2>
+      
+      <div class="cta-form-wrapper">
+        <form class="cta-form" action="#" method="post" onsubmit="event.preventDefault(); alert('Terima kasih! Anda telah berlangganan newsletter Spionase Kelompok 3.');">
+          <input type="email" placeholder="Masukkan alamat email Anda" required>
+          <button type="submit" class="btn-join">
+            <span>Langganan</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Compact Minimalist Footer ================= -->
+  <footer class="footer-compact" id="footer">
+    <div class="container footer-compact-inner">
+      <div class="footer-compact-brand">
+        <a href="index.html" class="logo">
+          <svg class="logo-icon" viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM11 19.93C7.05 19.43 4 16.05 4 12C4 7.95 7.05 4.57 11 4.07V19.93ZM13 4.07C16.95 4.57 20 7.95 20 12C20 16.05 16.95 19.43 13 19.93V4.07Z"/>
+          </svg>
+          <span>Spionase Kelompok 3</span>
+        </a>
+        <p>&copy; 2024 Spionase Kelompok 3. Media Berita & Artikel Teknologi.</p>
+      </div>
+      <div class="footer-compact-links">
+        <button type="button" class="nav-link" style="color: var(--text-muted); font-size:13px;" onclick="showTopic('popular')">Berita Populer</button>
+        <button type="button" class="nav-link" style="color: var(--text-muted); font-size:13px;" onclick="showTopic('latest')">Artikel Terbaru</button>
+        <a href="profile.html">Profil Saya</a>
+        <a href="auth.html?mode=signin">Akun</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Auth Script -->
+  <script src="auth.js"></script>
+
+  <!-- ================= Interactive Filtering & Search Script ================= -->
+  <script>
+    let currentCategory = 'ALL';
+    let currentSearchQuery = '';
+
+    // Scroll helper
+    function scrollToArticles(e) {
+      if (e) e.preventDefault();
+      document.getElementById('articleFeedArea').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Filter by category
+    function applyCategoryFilter(categoryKey, clickedBtn = null) {
+      currentCategory = categoryKey.toUpperCase();
+      
+      // Update active state on filter pills
+      const pills = document.querySelectorAll('.filter-pill');
+      pills.forEach(pill => {
+        const text = pill.textContent.toUpperCase();
+        if (
+          (currentCategory === 'ALL' && text.includes('SEMUA')) ||
+          (currentCategory !== 'ALL' && text.includes(currentCategory.split(' ')[0]))
+        ) {
+          pill.classList.add('active');
+        } else {
+          pill.classList.remove('active');
+        }
+      });
+
+      // Show both popular and latest sections for filtered view
+      document.getElementById('popularSection').style.display = 'block';
+      document.getElementById('latestSection').style.display = 'block';
+
+      renderFilteredArticles();
+      scrollToArticles();
+    }
+
+    // Show specific topic (Popular vs Latest)
+    function showTopic(topicType) {
+      currentCategory = 'ALL';
+      currentSearchQuery = '';
+      document.getElementById('mainSearchInput').value = '';
+
+      if (topicType === 'popular') {
+        document.getElementById('popularSection').style.display = 'block';
+        document.getElementById('latestSection').style.display = 'none';
+        document.getElementById('filterStatusLabel').innerHTML = 'Menampilkan: <strong>Topik Populer (4)</strong>';
+        document.getElementById('popularSection').scrollIntoView({ behavior: 'smooth' });
+      } else if (topicType === 'latest') {
+        document.getElementById('popularSection').style.display = 'none';
+        document.getElementById('latestSection').style.display = 'block';
+        document.getElementById('filterStatusLabel').innerHTML = 'Menampilkan: <strong>Artikel Terbaru (6)</strong>';
+        document.getElementById('latestSection').scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    // Live search input
+    function handleLiveSearch(query) {
+      currentSearchQuery = query.trim().toLowerCase();
+      renderFilteredArticles();
+    }
+
+    function handleSearchSubmit(e) {
+      e.preventDefault();
+      const val = document.getElementById('mainSearchInput').value;
+      handleLiveSearch(val);
+      scrollToArticles();
+    }
+
+    // Filter logic
+    function renderFilteredArticles() {
+      const allArticles = document.querySelectorAll('.article-item');
+      let visibleCount = 0;
+
+      allArticles.forEach(item => {
+        const cat = (item.getAttribute('data-category') || '').toUpperCase();
+        const title = (item.getAttribute('data-title') || '').toLowerCase();
+        const text = item.textContent.toLowerCase();
+
+        const matchCategory = (currentCategory === 'ALL') || cat.includes(currentCategory);
+        const matchSearch = (!currentSearchQuery) || title.includes(currentSearchQuery) || text.includes(currentSearchQuery) || cat.toLowerCase().includes(currentSearchQuery);
+
+        if (matchCategory && matchSearch) {
+          item.style.display = 'block';
+          visibleCount++;
+        } else {
+          item.style.display = 'none';
+        }
+      });
+
+      // Update status text
+      const statusLabel = document.getElementById('filterStatusLabel');
+      const noResultsBox = document.getElementById('noResultsBox');
+      const paginationBox = document.getElementById('paginationBox');
+
+      if (currentCategory === 'ALL' && !currentSearchQuery) {
+        statusLabel.innerHTML = `Menampilkan: <strong>Semua Artikel (${visibleCount})</strong>`;
+      } else {
+        const label = currentCategory !== 'ALL' ? currentCategory : `Pencarian "${currentSearchQuery}"`;
+        statusLabel.innerHTML = `Hasil Kategori <strong>${label}</strong>: (${visibleCount} artikel)`;
+      }
+
+      if (visibleCount === 0) {
+        noResultsBox.style.display = 'block';
+        paginationBox.style.display = 'none';
+      } else {
+        noResultsBox.style.display = 'none';
+        paginationBox.style.display = 'flex';
+      }
+    }
+
+    // Check query params on page load (e.g. index.html?category=TEKNOLOGI)
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const catParam = urlParams.get('category');
+      const qParam = urlParams.get('q');
+
+      if (catParam) {
+        applyCategoryFilter(catParam);
+      } else if (qParam) {
+        document.getElementById('mainSearchInput').value = qParam;
+        handleLiveSearch(qParam);
+      }
+    });
+  </script>
+</body>
+</html>

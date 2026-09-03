@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pengaturan Profil - Spionase Kelompok 3</title>
+  <!-- External CSS -->
+  <link rel="stylesheet" href="style.css">
+  <!-- Supabase JS Client Library via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Supabase Configuration -->
+  <script src="supabase-config.js"></script>
+</head>
+<body class="profile-page-body">
+
+  <!-- ================= Header (Solid Style) ================= -->
+  <header class="header header-solid">
+    <div class="container header-container">
+      <a href="index.html" class="logo">
+        <svg class="logo-icon" viewBox="0 0 24 24">
+          <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM11 19.93C7.05 19.43 4 16.05 4 12C4 7.95 7.05 4.57 11 4.07V19.93ZM13 4.07C16.95 4.57 20 7.95 20 12C20 16.05 16.95 19.43 13 19.93V4.07Z"/>
+        </svg>
+        <span>Spionase <span class="logo-accent">Kelompok 3</span></span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="index.html" class="nav-link">Beranda</a>
+        <a href="index.html#popular" class="nav-link">Artikel Populer</a>
+        <a href="index.html#latest" class="nav-link">Artikel Terbaru</a>
+      </nav>
+
+      <div class="header-auth">
+        <a href="auth.html?mode=signin" class="btn-sign-in">Sign In</a>
+        <a href="auth.html?mode=signup" class="btn-sign-up">Sign Up</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= Profile Main Content ================= -->
+  <main class="container profile-container">
+    
+    <div class="profile-layout">
+      <!-- Left Sidebar Menu -->
+      <aside class="profile-sidebar">
+        <div class="profile-card-preview">
+          <div class="avatar-edit-wrapper">
+            <img id="sidebarAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80" alt="Avatar" class="profile-main-avatar">
+          </div>
+          <h3 id="sidebarName" class="sidebar-user-name">User Spionase</h3>
+          <span id="sidebarRole" class="sidebar-user-role">Pembaca</span>
+          <p id="sidebarEmail" class="sidebar-user-email">user@spionase.com</p>
+        </div>
+
+        <nav class="profile-sidebar-nav">
+          <button type="button" class="profile-nav-tab active" onclick="switchProfileTab('general')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            Profil Pengguna
+          </button>
+          <button type="button" class="profile-nav-tab" onclick="switchProfileTab('security')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+            Keamanan & Password
+          </button>
+          <button type="button" class="profile-nav-tab text-danger" onclick="logoutUser()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+            Keluar Akun
+          </button>
+        </nav>
+      </aside>
+
+      <!-- Right Form Settings -->
+      <section class="profile-content-area">
+        
+        <!-- Alert Box -->
+        <div id="profileAlert" class="auth-alert" style="display: none;"></div>
+
+        <!-- Tab 1: General Settings -->
+        <div id="generalTab" class="profile-tab-content">
+          <div class="tab-header-box">
+            <h2>Informasi Akun</h2>
+            <p>Kelola data diri dan informasi profil publik Anda di Spionase Kelompok 3.</p>
+          </div>
+
+          <form id="profileForm" onsubmit="handleProfileUpdate(event)">
+            <!-- Avatar Selection -->
+            <div class="form-group">
+              <label>Pilih Foto Profil (Avatar)</label>
+              <div class="avatar-choices">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" class="avatar-choice-item active" onclick="selectAvatar(this)">
+                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80" class="avatar-choice-item" onclick="selectAvatar(this)">
+                <img src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=150&q=80" class="avatar-choice-item" onclick="selectAvatar(this)">
+                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80" class="avatar-choice-item" onclick="selectAvatar(this)">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80" class="avatar-choice-item" onclick="selectAvatar(this)">
+              </div>
+            </div>
+
+            <div class="profile-form-grid">
+              <div class="form-group">
+                <label for="profName">Nama Lengkap</label>
+                <div class="input-with-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                  <input type="text" id="profName" required>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="profEmail">Alamat Email</label>
+                <div class="input-with-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                  <input type="email" id="profEmail" disabled style="opacity: 0.7; cursor: not-allowed;">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="profRole">Peran / Kategori Pengguna</label>
+                <div class="input-with-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
+                  <select id="profRole" class="auth-select">
+                    <option value="Pembaca">Pembaca Berita</option>
+                    <option value="Penulis / Jurnalis">Penulis / Jurnalis</option>
+                    <option value="Tech Enthusiast">Tech Enthusiast</option>
+                    <option value="Mahasiswa / Peneliti">Mahasiswa / Peneliti</option>
+                    <option value="Pengamat Industri">Pengamat Industri</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="profPhone">Nomor WhatsApp / Telepon</label>
+                <div class="input-with-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                  <input type="tel" id="profPhone" placeholder="+62 812 3456 7890">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="profBio">Bio / Tentang Saya</label>
+              <textarea id="profBio" rows="3" class="profile-textarea" placeholder="Tuliskan ringkasan singkat mengenai minat topik atau latar belakang Anda..."></textarea>
+            </div>
+
+            <div class="profile-btn-row">
+              <button type="submit" class="btn-save-profile" id="btnSaveProfile">Simpan Perubahan</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Tab 2: Security & Password -->
+        <div id="securityTab" class="profile-tab-content" style="display: none;">
+          <div class="tab-header-box">
+            <h2>Keamanan & Kata Sandi</h2>
+            <p>Pastikan akun Anda selalu aman dengan memperbarui kata sandi secara berkala.</p>
+          </div>
+
+          <form id="passwordForm" onsubmit="handlePasswordUpdate(event)">
+            <div class="form-group">
+              <label for="newPassword">Kata Sandi Baru</label>
+              <div class="input-with-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                <input type="password" id="newPassword" placeholder="Minimal 6 karakter" minlength="6" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="confirmPassword">Konfirmasi Kata Sandi Baru</label>
+              <div class="input-with-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                <input type="password" id="confirmPassword" placeholder="Ketik ulang kata sandi baru" minlength="6" required>
+              </div>
+            </div>
+
+            <div class="profile-btn-row">
+              <button type="submit" class="btn-save-profile">Perbarui Password</button>
+            </div>
+          </form>
+        </div>
+
+      </section>
+    </div>
+
+  </main>
+
+  <!-- ================= Compact Footer ================= -->
+  <footer class="footer-compact">
+    <div class="container footer-compact-inner">
+      <div class="footer-compact-brand">
+        <a href="index.html" class="logo">
+          <svg class="logo-icon" viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM11 19.93C7.05 19.43 4 16.05 4 12C4 7.95 7.05 4.57 11 4.07V19.93ZM13 4.07C16.95 4.57 20 7.95 20 12C20 16.05 16.95 19.43 13 19.93V4.07Z"/>
+          </svg>
+          <span>Spionase Kelompok 3</span>
+        </a>
+        <p>&copy; 2024 Spionase Kelompok 3. All rights reserved.</p>
+      </div>
+      <div class="footer-compact-links">
+        <a href="index.html">Beranda</a>
+        <a href="index.html#popular">Populer</a>
+        <a href="index.html#latest">Artikel</a>
+        <a href="profile.html">Pengaturan</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Auth Script -->
+  <script src="auth.js"></script>
+
+  <!-- Profile Page Controller Script -->
+  <script>
+    let selectedAvatarUrl = '';
+
+    function selectAvatar(el) {
+      document.querySelectorAll('.avatar-choice-item').forEach(img => img.classList.remove('active'));
+      el.classList.add('active');
+      selectedAvatarUrl = el.src;
+      document.getElementById('sidebarAvatar').src = el.src;
+    }
+
+    function switchProfileTab(tab) {
+      const generalTab = document.getElementById('generalTab');
+      const securityTab = document.getElementById('securityTab');
+      const tabs = document.querySelectorAll('.profile-nav-tab');
+
+      tabs.forEach(t => t.classList.remove('active'));
+
+      if (tab === 'security') {
+        generalTab.style.display = 'none';
+        securityTab.style.display = 'block';
+        tabs[1].classList.add('active');
+      } else {
+        generalTab.style.display = 'block';
+        securityTab.style.display = 'none';
+        tabs[0].classList.add('active');
+      }
+    }
+
+    function showProfileAlert(msg, isSuccess = true) {
+      const alertBox = document.getElementById('profileAlert');
+      alertBox.textContent = msg;
+      alertBox.className = isSuccess ? 'auth-alert success' : 'auth-alert error';
+      alertBox.style.display = 'block';
+      setTimeout(() => { alertBox.style.display = 'none'; }, 4000);
+    }
+
+    function loadUserProfileData() {
+      const user = getCurrentUser();
+      if (!user) {
+        window.location.href = 'auth.html?mode=signin';
+        return;
+      }
+
+      // Populate sidebar
+      document.getElementById('sidebarName').textContent = user.name;
+      document.getElementById('sidebarRole').textContent = user.role || 'Pembaca';
+      document.getElementById('sidebarEmail').textContent = user.email;
+      if (user.avatar) {
+        document.getElementById('sidebarAvatar').src = user.avatar;
+        selectedAvatarUrl = user.avatar;
+      }
+
+      // Populate Form
+      document.getElementById('profName').value = user.name || '';
+      document.getElementById('profEmail').value = user.email || '';
+      document.getElementById('profRole').value = user.role || 'Pembaca';
+      document.getElementById('profPhone').value = user.phone || '';
+      document.getElementById('profBio').value = user.bio || '';
+    }
+
+    async function handleProfileUpdate(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btnSaveProfile');
+      btn.disabled = true;
+      btn.textContent = 'Menyimpan...';
+
+      const name = document.getElementById('profName').value;
+      const role = document.getElementById('profRole').value;
+      const phone = document.getElementById('profPhone').value;
+      const bio = document.getElementById('profBio').value;
+      const avatar = selectedAvatarUrl || document.getElementById('sidebarAvatar').src;
+
+      const result = await updateUserProfile(name, role, phone, bio, avatar);
+
+      btn.disabled = false;
+      btn.textContent = 'Simpan Perubahan';
+
+      if (result.success) {
+        showProfileAlert('Profil berhasil diperbarui!', true);
+        loadUserProfileData();
+      } else {
+        showProfileAlert(result.message || 'Gagal memperbarui profil.', false);
+      }
+    }
+
+    async function handlePasswordUpdate(e) {
+      e.preventDefault();
+      const newPass = document.getElementById('newPassword').value;
+      const confirmPass = document.getElementById('confirmPassword').value;
+
+      if (newPass !== confirmPass) {
+        showProfileAlert('Konfirmasi kata sandi tidak cocok.', false);
+        return;
+      }
+
+      const result = await changeUserPassword(newPass);
+      if (result.success) {
+        showProfileAlert('Kata sandi berhasil diperbarui!', true);
+        document.getElementById('passwordForm').reset();
+      } else {
+        showProfileAlert(result.message || 'Gagal memperbarui kata sandi.', false);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadUserProfileData();
+    });
+  </script>
+</body>
+</html>
