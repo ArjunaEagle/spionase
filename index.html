@@ -10,8 +10,20 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <!-- Supabase Configuration -->
   <script src="supabase-config.js"></script>
+  <!-- Dark Mode early-init: apply saved theme before paint to prevent flash -->
+  <script>
+    (function() {
+      const saved = localStorage.getItem('spionase-theme');
+      if (saved === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
 </head>
 <body>
+
+  <!-- Reading Progress Bar -->
+  <div id="reading-progress-bar"></div>
 
   <!-- ================= Header & Interactive Navigation ================= -->
   <header class="header">
@@ -32,12 +44,10 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
           </button>
           <div class="nav-dropdown-menu">
-            <button type="button" class="dropdown-link-item" onclick="applyCategoryFilter('TEKNOLOGI')">🤖 Teknologi & AI</button>
-            <button type="button" class="dropdown-link-item" onclick="applyCategoryFilter('SAINS')">🔭 Sains & Antariksa</button>
-            <button type="button" class="dropdown-link-item" onclick="applyCategoryFilter('KEAMANAN SIBER')">🛡️ Keamanan Siber</button>
-            <button type="button" class="dropdown-link-item" onclick="applyCategoryFilter('SOFTWARE ENGINEERING')">💻 Software & Web</button>
-            <button type="button" class="dropdown-link-item" onclick="applyCategoryFilter('INOVASI KOTA')">🏙️ Smart City & IoT</button>
-            <button type="button" class="dropdown-link-item" onclick="applyCategoryFilter('BIOTEKNOLOGI')">🧬 Bioteknologi Medis</button>
+            <button type="button" class="dropdown-link-item" onclick="applyCategoryFilter('EKO-KIMIA')">Eko-Kimia</button>
+            <button type="button" class="dropdown-link-item" onclick="applyCategoryFilter('PPKN')">Regulasi &amp; PPKn</button>
+            <button type="button" class="dropdown-link-item" onclick="applyCategoryFilter('SOLUSI DIGITAL')">Solusi Digital</button>
+            <button type="button" class="dropdown-link-item" onclick="applyCategoryFilter('EKO-INOVASI')">Eko-Inovasi</button>
           </div>
         </div>
 
@@ -48,16 +58,43 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
           </button>
           <div class="nav-dropdown-menu">
-            <button type="button" class="dropdown-link-item" onclick="showTopic('popular')">🔥 Artikel Populer</button>
-            <button type="button" class="dropdown-link-item" onclick="showTopic('latest')">⚡ Artikel Terbaru</button>
-            <button type="button" class="dropdown-link-item" onclick="applyCategoryFilter('ALL')">📑 Semua Kategori</button>
+            <button type="button" class="dropdown-link-item" onclick="showTopic('popular')">Artikel Pilihan</button>
+            <button type="button" class="dropdown-link-item" onclick="showTopic('latest')">Artikel Terbaru</button>
+            <button type="button" class="dropdown-link-item" onclick="applyCategoryFilter('ALL')">Semua Kategori</button>
           </div>
         </div>
 
         <button type="button" class="nav-link" onclick="showTopic('popular')">Populer</button>
         <button type="button" class="nav-link" onclick="showTopic('latest')">Terbaru</button>
-        <a href="#newsletter" class="nav-link">Newsletter</a>
+        <a href="#interaktif" class="nav-link">Interaktif</a>
       </nav>
+
+      <!-- Dark/Light Mode Toggle -->
+      <button
+        type="button"
+        class="theme-toggle-btn"
+        id="themeToggleBtn"
+        onclick="toggleTheme()"
+        aria-label="Toggle Dark/Light Mode"
+        title="Toggle Dark/Light Mode"
+      >
+        <!-- Sun icon (light mode) -->
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <!-- Moon icon (dark mode) -->
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
 
       <div class="header-auth">
         <a href="auth.html?mode=signin" class="btn-sign-in">Sign In</a>
@@ -70,7 +107,7 @@
   <section class="hero">
     <div class="container">
       <div class="hero-content">
-        <h1 class="hero-title">Eksplorasi Informasi Terkini, Teknologi Digital, dan Perkembangan Sains Global</h1>
+        <h1 class="hero-title">Literasi Lingkungan Digital: Kimia, Ekologi, dan Hak Warga dalam Era Informasi</h1>
         <div class="hero-search-wrapper">
           <form class="search-box" onsubmit="handleSearchSubmit(event)">
             <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -105,16 +142,14 @@
     <div class="container category-filter-container">
       <div class="category-filter-pills">
         <button type="button" class="filter-pill active" onclick="applyCategoryFilter('ALL', this)">Semua Berita</button>
-        <button type="button" class="filter-pill" onclick="applyCategoryFilter('TEKNOLOGI', this)">Teknologi & AI</button>
-        <button type="button" class="filter-pill" onclick="applyCategoryFilter('SAINS', this)">Sains & Antariksa</button>
-        <button type="button" class="filter-pill" onclick="applyCategoryFilter('KEAMANAN SIBER', this)">Keamanan Siber</button>
-        <button type="button" class="filter-pill" onclick="applyCategoryFilter('SOFTWARE ENGINEERING', this)">Software & Web</button>
-        <button type="button" class="filter-pill" onclick="applyCategoryFilter('INOVASI KOTA', this)">Smart City</button>
-        <button type="button" class="filter-pill" onclick="applyCategoryFilter('BIOTEKNOLOGI', this)">Bioteknologi</button>
+        <button type="button" class="filter-pill" onclick="applyCategoryFilter('EKO-KIMIA', this)">Eko-Kimia</button>
+        <button type="button" class="filter-pill" onclick="applyCategoryFilter('PPKN', this)">Regulasi &amp; PPKn</button>
+        <button type="button" class="filter-pill" onclick="applyCategoryFilter('SOLUSI DIGITAL', this)">Solusi Digital</button>
+        <button type="button" class="filter-pill" onclick="applyCategoryFilter('EKO-INOVASI', this)">Eko-Inovasi</button>
       </div>
 
       <div class="filter-status-text" id="filterStatusLabel">
-        Menampilkan: <strong>Semua Artikel (10)</strong>
+        Menampilkan: <strong>Semua Artikel (9)</strong>
       </div>
     </div>
   </div>
@@ -122,55 +157,47 @@
   <!-- ================= Popular Articles Section ================= -->
   <section class="section" id="popularSection">
     <div class="container">
-      <h2 class="section-title" id="popularTitle">Artikel Populer</h2>
+      <h2 class="section-title" id="popularTitle">Artikel Pilihan: Krisis Lingkungan</h2>
       
       <div class="popular-grid" id="popularGrid">
-        <!-- Main Featured Article -->
-        <a href="article.html?id=1" class="article-link article-item" data-category="TEKNOLOGI" data-title="Perkembangan Kecerdasan Buatan dan Dampaknya Terhadap Masa Depan Industri Digital">
+        <!-- Main Featured Article (Topik 1 Kimia — Tumpahan Minyak Karawang) -->
+        <a href="article.html?id=1" class="article-link article-item" data-category="EKO-KIMIA" data-title="Tumpahan Minyak Karawang Mengancam Ekosistem Laut dan Kehidupan Warga Pesisir">
           <article class="featured-card">
             <div class="featured-img-wrap">
-              <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=80" alt="Perkembangan AI dan Masa Depan Digital">
+              <img src="https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?auto=format&fit=crop&w=900&q=80" alt="Tumpahan Minyak Karawang">
             </div>
-            <span class="article-date">TEKNOLOGI • 23 OKTOBER 2026</span>
-            <h3 class="featured-title">Perkembangan Kecerdasan Buatan dan Dampaknya Terhadap Masa Depan Industri Digital.</h3>
-            <p class="featured-desc">Bagaimana integrasi teknologi AI generasi terbaru mampu merevolusi efisiensi operasional, analisis data skala besar, dan membuka peluang karier baru di ranah teknologi modern.</p>
+            <span class="article-date">EKO-KIMIA • 23 OKTOBER 2026</span>
+            <h3 class="featured-title">Tumpahan Minyak Karawang: Ketika Senyawa Hidrokarbon Merenggut Hak Hidup Warga Pesisir.</h3>
+            <p class="featured-desc">Tumpahan minyak di perairan Karawang memperlihatkan bagaimana hidrokarbon dapat mengganggu ekosistem laut, kegiatan nelayan, dan rasa aman warga pesisir.</p>
           </article>
         </a>
 
         <!-- Side Stacked Articles -->
         <div class="side-articles-list">
-          <a href="article.html?id=2" class="article-link article-item" data-category="SAINS" data-title="Teleskop Luar Angkasa Generasi Baru Temukan Gugusan Bintang Misterius">
+          <!-- Topik 2: Oli Bekas -->
+          <a href="article.html?id=2" class="article-link article-item" data-category="EKO-KIMIA" data-title="Bahaya Buang Oli Bekas Sembarangan Ancaman Nyata Pencemaran Tanah dan Air Tanah">
             <article class="side-card">
               <div class="side-img-wrap">
-                <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=400&q=80" alt="Eksplorasi Antariksa">
+                <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=400&q=80" alt="Oli Bekas Berbahaya">
               </div>
               <div class="side-content">
-                <span class="article-date">SAINS • 23 OKTOBER 2026</span>
-                <h4 class="side-title">Teleskop Luar Angkasa Generasi Baru Temukan Gugusan Bintang Misterius.</h4>
+                <span class="article-date">EKO-KIMIA • 23 OKTOBER 2026</span>
+                <h4 class="side-title">Bahaya Buang Oli Bekas Sembarangan: Ancaman Nyata bagi Tanah dan Air Tanah.</h4>
+                <p class="side-desc">Oli bekas membawa kontaminan dari pemakaian kendaraan. Pengumpulan dan penyerahan ke pengelola berizin mencegah limbah masuk ke tanah atau saluran air.</p>
               </div>
             </article>
           </a>
 
-          <a href="article.html?id=3" class="article-link article-item" data-category="KEAMANAN SIBER" data-title="Langkah Strategis Memperkuat Pertahanan Keamanan Data Digital di Era Cloud">
+          <!-- Topik 3: Mikroplastik -->
+          <a href="article.html?id=3" class="article-link article-item" data-category="EKO-KIMIA" data-title="Ancaman Mikroplastik dalam Rantai Makanan Laut Krisis Senyawa Kimia Tak Kasat Mata">
             <article class="side-card">
               <div class="side-img-wrap">
-                <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=400&q=80" alt="Keamanan Siber">
+                <img src="https://images.unsplash.com/photo-1604187351574-c75ca79f5807?auto=format&fit=crop&w=400&q=80" alt="Mikroplastik di Laut">
               </div>
               <div class="side-content">
-                <span class="article-date">KEAMANAN SIBER • 23 OKTOBER 2026</span>
-                <h4 class="side-title">Langkah Strategis Memperkuat Pertahanan Keamanan Data Digital di Era Cloud.</h4>
-              </div>
-            </article>
-          </a>
-
-          <a href="article.html?id=4" class="article-link article-item" data-category="SOFTWARE ENGINEERING" data-title="Framework Web Terpopuler yang Wajib Dipelajari Pengembang Saat Ini">
-            <article class="side-card">
-              <div class="side-img-wrap">
-                <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=400&q=80" alt="Pemrograman Modern">
-              </div>
-              <div class="side-content">
-                <span class="article-date">SOFTWARE ENGINEERING • 23 OKTOBER 2026</span>
-                <h4 class="side-title">Framework Web Terpopuler yang Wajib Dipelajari Pengembang Saat Ini.</h4>
+                <span class="article-date">EKO-KIMIA • 23 OKTOBER 2026</span>
+                <h4 class="side-title">Ancaman Mikroplastik dalam Rantai Makanan Laut: Krisis Senyawa Kimia Tak Kasat Mata.</h4>
+                <p class="side-desc">Partikel plastik berukuran hingga lima milimeter dapat masuk ke ekosistem dan rantai pangan. Dampak kesehatan spesifiknya masih terus diteliti.</p>
               </div>
             </article>
           </a>
@@ -182,120 +209,89 @@
   <!-- ================= Latest Articles Section ================= -->
   <section class="section latest-section" id="latestSection">
     <div class="container">
-      <h2 class="section-title" id="latestTitle">Artikel Terbaru</h2>
+      <h2 class="section-title" id="latestTitle">Artikel Terbaru: Hak, Nilai, &amp; Solusi</h2>
 
       <div class="latest-grid" id="latestGrid">
-        <!-- Card 1 -->
-        <a href="article.html?id=5" class="article-link article-item" data-category="INOVASI KOTA" data-title="Penerapan Internet of Things IoT dalam Mewujudkan Konsep Smart City Modern">
+        <!-- Card 1 — PPKn: Hak Lingkungan Sehat UUD 1945 Pasal 28H -->
+        <a href="article.html?id=4" class="article-link article-item" data-category="PPKN" data-title="Hak atas Lingkungan Hidup Sehat Amanat UUD 1945 Pasal 28H Ayat 1 yang Kerap Diabaikan">
           <article class="latest-card">
             <div class="latest-img-wrap">
-              <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=600&q=80" alt="Smart City IoT">
+              <img src="https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&w=600&q=80" alt="Hak Konstitusional Lingkungan">
             </div>
-            <span class="article-date">INOVASI KOTA • 23 OKTOBER 2026</span>
-            <h4 class="latest-title">Penerapan Internet of Things (IoT) dalam Mewujudkan Konsep Smart City Modern.</h4>
-            <p class="latest-desc">Pemanfaatan sensor pintar dan otomatisasi untuk tata kelola lalu lintas, hemat energi, serta pelayanan publik terpadu.</p>
+            <span class="article-date">REGULASI &amp; PPKN • 23 OKTOBER 2026</span>
+            <h4 class="latest-title">Hak atas Lingkungan Sehat: Amanat UUD 1945 Pasal 28H Ayat 1 yang Kerap Diabaikan.</h4>
+            <p class="latest-desc">Pasal 28H ayat (1) UUD 1945 menegaskan hak atas lingkungan yang baik dan sehat, sekaligus dasar untuk pengawasan dan perlindungan warga.</p>
           </article>
         </a>
 
-        <!-- Card 2 -->
-        <a href="article.html?id=6" class="article-link article-item" data-category="DESAIN & PRODUK" data-title="Prinsip Desain UI UX yang Meningkatkan Retensi dan Kenyamanan Pengguna">
+        <!-- Card 2 — PPKn: Gotong Royong Sila 3 -->
+        <a href="article.html?id=5" class="article-link article-item" data-category="PPKN" data-title="Gotong Royong Kelestarian Alam Implementasi Sila Ketiga dalam Gerakan Lingkungan">
           <article class="latest-card">
             <div class="latest-img-wrap">
-              <img src="https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=600&q=80" alt="UI/UX Modern">
+              <img src="https://images.unsplash.com/photo-1530587191325-3db32d826c18?auto=format&fit=crop&w=600&q=80" alt="Gotong Royong Lingkungan">
             </div>
-            <span class="article-date">DESAIN & PRODUK • 23 OKTOBER 2026</span>
-            <h4 class="latest-title">Prinsip Desain UI/UX yang Meningkatkan Retensi dan Kenyamanan Pengguna.</h4>
-            <p class="latest-desc">Menyelami teknik navigasi intuitif, mikro-interaksi, dan aksesibilitas ramah pengguna pada aplikasi masa kini.</p>
+            <span class="article-date">REGULASI &amp; PPKN • 23 OKTOBER 2026</span>
+            <h4 class="latest-title">Gotong Royong Kelestarian Alam: Implementasi Sila Ketiga dalam Gerakan Lingkungan.</h4>
+            <p class="latest-desc">Sila Ketiga hadir dalam tindakan bersama, dari pemilahan sampah hingga pemantauan sungai, karena ruang hidup yang sehat tidak bisa dijaga sendirian.</p>
           </article>
         </a>
 
-        <!-- Card 3 -->
-        <a href="article.html?id=7" class="article-link article-item" data-category="EKONOMI DIGITAL" data-title="Peluang dan Tantangan Startup Teknologi dalam Ekosistem Bisnis Global">
+        <!-- Card 3 — PPKn: Musyawarah Energi Bersih Sila 4 & 5 -->
+        <a href="article.html?id=6" class="article-link article-item" data-category="PPKN" data-title="Musyawarah Keadilan Energi Bersih Implementasi Sila Keempat dan Kelima Pancasila">
           <article class="latest-card">
             <div class="latest-img-wrap">
-              <img src="https://images.unsplash.com/photo-1579546929518-9e396f3cc809?auto=format&fit=crop&w=600&q=80" alt="Ekonomi Digital">
+              <img src="https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=600&q=80" alt="Energi Bersih dan Keadilan">
             </div>
-            <span class="article-date">EKONOMI DIGITAL • 23 OKTOBER 2026</span>
-            <h4 class="latest-title">Peluang dan Tantangan Startup Teknologi dalam Ekosistem Bisnis Global.</h4>
-            <p class="latest-desc">Analisis faktor keberhasilan model bisnis berkelanjutan bagi para pendiri perusahaan rintisan digital.</p>
+            <span class="article-date">REGULASI &amp; PPKN • 23 OKTOBER 2026</span>
+            <h4 class="latest-title">Musyawarah Keadilan Energi Bersih: Implementasi Sila 4 &amp; 5 Pancasila.</h4>
+            <p class="latest-desc">Musyawarah membuat transisi energi bersih lebih inklusif. Sila Keempat dan Kelima mengarahkan keputusan pada keterlibatan warga serta manfaat yang adil.</p>
           </article>
         </a>
 
-        <!-- Card 4 -->
-        <a href="article.html?id=8" class="article-link article-item" data-category="BIOTEKNOLOGI" data-title="Inovasi Bioteknologi Medis dalam Percepatan Deteksi Penyakit Kronis">
+        <!-- Card 4 — Solusi Digital: Kalkulator Emisi -->
+        <a href="article.html?id=7" class="article-link article-item" data-category="SOLUSI DIGITAL" data-title="Inovasi Aplikasi Kalkulator Jejak Karbon untuk Mendorong Gaya Hidup Rendah Emisi">
           <article class="latest-card">
             <div class="latest-img-wrap">
-              <img src="https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=600&q=80" alt="Riset Medis">
+              <img src="https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&w=600&q=80" alt="Teknologi Lingkungan">
             </div>
-            <span class="article-date">BIOTEKNOLOGI • 23 OKTOBER 2026</span>
-            <h4 class="latest-title">Inovasi Bioteknologi Medis dalam Percepatan Deteksi Penyakit Kronis.</h4>
-            <p class="latest-desc">Penggunaan algoritma deep learning dalam mendiagnosis citra medis dengan tingkat akurasi tinggi.</p>
+            <span class="article-date">SOLUSI DIGITAL • 23 OKTOBER 2026</span>
+            <h4 class="latest-title">Inovasi Aplikasi Kalkulator Jejak Karbon untuk Mendorong Gaya Hidup Rendah Emisi.</h4>
+            <p class="latest-desc">Kalkulator digital membantu warga memperkirakan emisi dari transportasi, listrik, dan konsumsi, lalu memilih langkah pengurangan yang realistis.</p>
           </article>
         </a>
 
-        <!-- Card 5 -->
-        <a href="article.html?id=9" class="article-link article-item" data-category="CLOUD COMPUTING" data-title="Membangun Arsitektur Microservices yang Tangguh dan Efisien Biaya">
+        <!-- Card 5 — Eko-Inovasi: Bioremediasi -->
+        <a href="article.html?id=8" class="article-link article-item" data-category="EKO-INOVASI" data-title="Bioremediasi Solusi Bioteknologi untuk Memulihkan Tanah dan Perairan Tercemar Minyak">
           <article class="latest-card">
             <div class="latest-img-wrap">
-              <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=600&q=80" alt="Cloud Architecture">
+              <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=600&q=80" alt="Bioremediasi Alam">
             </div>
-            <span class="article-date">CLOUD COMPUTING • 23 OKTOBER 2026</span>
-            <h4 class="latest-title">Membangun Arsitektur Microservices yang Tangguh dan Efisien Biaya.</h4>
-            <p class="latest-desc">Strategi penerapan containerization, continuous deployment, dan monitoring performa server secara terpusat.</p>
+            <span class="article-date">EKO-INOVASI • 23 OKTOBER 2026</span>
+            <h4 class="latest-title">Bioremediasi: Solusi Bioteknologi untuk Memulihkan Tanah &amp; Perairan Tercemar Minyak.</h4>
+            <p class="latest-desc">Bioremediasi memanfaatkan mikroorganisme untuk membantu pemulihan pencemaran minyak, dengan syarat penilaian lokasi dan pemantauan ilmiah yang ketat.</p>
           </article>
         </a>
 
-        <!-- Card 6 -->
-        <a href="article.html?id=10" class="article-link article-item" data-category="RISET MASA DEPAN" data-title="Komputasi Kuantum Menuju Lompatan Besar Pengolahan Data Kompleks">
+        <!-- Card 6 — Eko-Inovasi: Plastik Daur Ulang -->
+        <a href="article.html?id=9" class="article-link article-item" data-category="EKO-INOVASI" data-title="Inovasi Material Bioplastik Menggantikan Plastik Konvensional Sumber Mikroplastik">
           <article class="latest-card">
             <div class="latest-img-wrap">
-              <img src="https://images.unsplash.com/photo-1507668077129-56e32842fceb?auto=format&fit=crop&w=600&q=80" alt="Evolusi Komputasi">
+              <img src="https://images.unsplash.com/photo-1558449028-b53a39d100fc?auto=format&fit=crop&w=600&q=80" alt="Bioplastik Inovatif">
             </div>
-            <span class="article-date">RISET MASA DEPAN • 23 OKTOBER 2026</span>
-            <h4 class="latest-title">Komputasi Kuantum: Menuju Lompatan Besar Pengolahan Data Kompleks.</h4>
-            <p class="latest-desc">Bagaimana riset komputasi berbasis qubit mulai memasuki ranah simulasi molekuler dan kriptografi canggih.</p>
+            <span class="article-date">EKO-INOVASI • 23 OKTOBER 2026</span>
+            <h4 class="latest-title">Inovasi Material Bioplastik: Menggantikan Plastik Konvensional Sumber Mikroplastik.</h4>
+            <p class="latest-desc">Material alternatif dapat mengurangi ketergantungan pada plastik konvensional, tetapi manfaatnya tetap bergantung pada desain produk dan sistem pengelolaan pasca-pakai.</p>
           </article>
         </a>
       </div>
 
-      <!-- Zero search results container -->
-      <div id="noResultsBox" class="empty-state-box" style="display: none;">
-        <h3>🔍 Artikel Tidak Ditemukan</h3>
-        <p>Coba gunakan kata kunci lain atau pilih kategori "Semua Berita" untuk melihat seluruh artikel.</p>
-      </div>
-
-      <!-- Pagination Controls -->
-      <div class="pagination-wrapper" id="paginationBox">
-        <button class="page-nav-btn" type="button" onclick="alert('Anda berada di halaman pertama.')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="19" y1="12" x2="5" y2="12"></line>
-            <polyline points="12 19 5 12 12 5"></polyline>
-          </svg>
-          <span>Sebelumnya</span>
-        </button>
-
-        <div class="page-numbers">
-          <span class="page-num active">1</span>
-          <span class="page-num">2</span>
-          <span class="page-num">3</span>
-          <span class="page-num dots">...</span>
-        </div>
-
-        <button class="page-nav-btn" type="button" onclick="alert('Semua 10 artikel sedang ditampilkan.')">
-          <span>Selanjutnya</span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-            <polyline points="12 5 19 12 12 19"></polyline>
-          </svg>
-        </button>
-      </div>
     </div>
   </section>
 
   <!-- ================= CTA Section ================= -->
   <section class="cta-banner" id="newsletter">
     <div class="container">
-      <h2 class="cta-title">Dapatkan Rangkuman Berita<br>& Artikel Terkini Setiap Hari</h2>
+      <h2 class="cta-title">Dapatkan Rangkuman Berita<br>&amp; Artikel Terkini Setiap Hari</h2>
       
       <div class="cta-form-wrapper">
         <form class="cta-form" action="#" method="post" onsubmit="event.preventDefault(); alert('Terima kasih! Anda telah berlangganan newsletter Spionase Kelompok 3.');">
@@ -312,6 +308,107 @@
     </div>
   </section>
 
+  <!-- ================= Fitur Interaktif LKPD ================= -->
+  <section class="section interactive-section" id="interaktif">
+    <div class="container">
+      <h2 class="section-title">Ruang Interaktif Warga Digital</h2>
+      <p class="interactive-intro">Wadah dialog digital Spionase Kelompok 3 untuk mengukur dampak, menyampaikan reaksi, dan menyuarakan pendapat tentang isu lingkungan.</p>
+
+      <div class="interactive-grid">
+
+        <!-- 1. Kalkulator Jejak Karbon -->
+        <div class="interactive-card carbon-calc-card">
+          <div class="icard-header">
+            <span class="icard-index">01</span>
+            <h3 class="icard-title">Kalkulator Jejak Karbon Mandiri</h3>
+          </div>
+          <p class="icard-desc">Hitung estimasi emisi CO₂ harian Anda berdasarkan aktivitas transportasi dan konsumsi energi.</p>
+
+          <div class="carbon-form">
+            <div class="carbon-row">
+              <label>Jarak berkendara motor atau mobil (km per hari)</label>
+              <input type="number" id="carbonKm" min="0" max="500" value="20" class="carbon-input">
+            </div>
+            <div class="carbon-row">
+              <label>Penggunaan listrik rumah (kWh per hari)</label>
+              <input type="number" id="carbonKwh" min="0" max="100" value="8" class="carbon-input">
+            </div>
+            <div class="carbon-row">
+              <label>Konsumsi daging merah (porsi per hari)</label>
+              <input type="number" id="carbonMeat" min="0" max="10" value="1" class="carbon-input">
+            </div>
+            <button type="button" class="btn-carbon-calc" onclick="hitungKarbon()">Hitung estimasi emisi</button>
+            <div class="carbon-result" id="carbonResult"></div>
+          </div>
+        </div>
+
+        <!-- 2. Reaksi pembaca -->
+        <div class="interactive-card emoji-reaction-card">
+          <div class="icard-header">
+            <span class="icard-index">02</span>
+            <h3 class="icard-title">Reaksi Warga Terhadap Krisis Lingkungan</h3>
+          </div>
+          <p class="icard-desc">Bagaimana perasaan Anda setelah membaca artikel pencemaran lingkungan ini?</p>
+
+          <div class="emoji-grid">
+            <button type="button" class="emoji-btn" onclick="addReaction('concerned', this)">
+              <span class="emoji-icon">😟</span>
+              <span class="emoji-label">Prihatin</span>
+              <span class="emoji-count" id="count-concerned">0</span>
+            </button>
+            <button type="button" class="emoji-btn" onclick="addReaction('angry', this)">
+              <span class="emoji-icon">😠</span>
+              <span class="emoji-label">Tegas</span>
+              <span class="emoji-count" id="count-angry">0</span>
+            </button>
+            <button type="button" class="emoji-btn" onclick="addReaction('sad', this)">
+              <span class="emoji-icon">💧</span>
+              <span class="emoji-label">Sedih</span>
+              <span class="emoji-count" id="count-sad">0</span>
+            </button>
+            <button type="button" class="emoji-btn" onclick="addReaction('hopeful', this)">
+              <span class="emoji-icon">🌱</span>
+              <span class="emoji-label">Optimis</span>
+              <span class="emoji-count" id="count-hopeful">0</span>
+            </button>
+            <button type="button" class="emoji-btn" onclick="addReaction('aware', this)">
+              <span class="emoji-icon">💡</span>
+              <span class="emoji-label">Terinspirasi</span>
+              <span class="emoji-count" id="count-aware">0</span>
+            </button>
+            <button type="button" class="emoji-btn" onclick="addReaction('act', this)">
+              <span class="emoji-icon">✓</span>
+              <span class="emoji-label">Siap bertindak</span>
+              <span class="emoji-count" id="count-act">0</span>
+            </button>
+          </div>
+          <p class="emoji-total-text" id="emojiTotal">Belum ada reaksi. Jadilah yang pertama!</p>
+        </div>
+
+        <!-- 3. Jajak Pendapat Digital -->
+        <div class="interactive-card poll-card">
+          <div class="icard-header">
+            <span class="icard-index">03</span>
+            <h3 class="icard-title">Jajak Pendapat: Suara Warga Terdampak</h3>
+          </div>
+          <p class="icard-desc">Menurut Anda, siapakah yang paling bertanggung jawab atas krisis pencemaran lingkungan di Indonesia?</p>
+
+          <div class="poll-options" id="pollOptions">
+            <button type="button" class="poll-option-btn" onclick="vote('industri')">Perusahaan industri dan korporasi</button>
+            <button type="button" class="poll-option-btn" onclick="vote('pemerintah')">Pemerintah dan pengawas lingkungan</button>
+            <button type="button" class="poll-option-btn" onclick="vote('masyarakat')">Masyarakat dan gaya hidup konsumtif</button>
+            <button type="button" class="poll-option-btn" onclick="vote('bersama')">Tanggung jawab bersama semua pihak</button>
+          </div>
+          <div class="poll-results" id="pollResults" style="display:none;"></div>
+          <p class="poll-reset-link" id="pollResetLink" style="display:none;">
+            <button type="button" onclick="resetPoll()" class="btn-reset-poll">Ubah pilihan</button>
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
   <!-- ================= Compact Minimalist Footer ================= -->
   <footer class="footer-compact" id="footer">
     <div class="container footer-compact-inner">
@@ -322,7 +419,7 @@
           </svg>
           <span>Spionase Kelompok 3</span>
         </a>
-        <p>&copy; 2024 Spionase Kelompok 3. Media Berita & Artikel Teknologi.</p>
+        <p>&copy; 2026 Spionase Kelompok 3. Media Literasi Lingkungan &amp; Digital.</p>
       </div>
       <div class="footer-compact-links">
         <button type="button" class="nav-link" style="color: var(--text-muted); font-size:13px;" onclick="showTopic('popular')">Berita Populer</button>
@@ -382,7 +479,7 @@
       if (topicType === 'popular') {
         document.getElementById('popularSection').style.display = 'block';
         document.getElementById('latestSection').style.display = 'none';
-        document.getElementById('filterStatusLabel').innerHTML = 'Menampilkan: <strong>Topik Populer (4)</strong>';
+        document.getElementById('filterStatusLabel').innerHTML = 'Menampilkan: <strong>Artikel Pilihan (3)</strong>';
         document.getElementById('popularSection').scrollIntoView({ behavior: 'smooth' });
       } else if (topicType === 'latest') {
         document.getElementById('popularSection').style.display = 'none';
@@ -428,8 +525,6 @@
 
       // Update status text
       const statusLabel = document.getElementById('filterStatusLabel');
-      const noResultsBox = document.getElementById('noResultsBox');
-      const paginationBox = document.getElementById('paginationBox');
 
       if (currentCategory === 'ALL' && !currentSearchQuery) {
         statusLabel.innerHTML = `Menampilkan: <strong>Semua Artikel (${visibleCount})</strong>`;
@@ -438,13 +533,7 @@
         statusLabel.innerHTML = `Hasil Kategori <strong>${label}</strong>: (${visibleCount} artikel)`;
       }
 
-      if (visibleCount === 0) {
-        noResultsBox.style.display = 'block';
-        paginationBox.style.display = 'none';
-      } else {
-        noResultsBox.style.display = 'none';
-        paginationBox.style.display = 'flex';
-      }
+      if (visibleCount === 0) statusLabel.innerHTML = 'Belum ada artikel yang sesuai dengan pencarian tersebut.';
     }
 
     // Check query params on page load (e.g. index.html?category=TEKNOLOGI)
@@ -461,5 +550,145 @@
       }
     });
   </script>
+
+  <!-- ================= Dark/Light Mode Toggle Script ================= -->
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const isDark = html.getAttribute('data-theme') === 'dark';
+      if (isDark) {
+        html.removeAttribute('data-theme');
+        localStorage.setItem('spionase-theme', 'light');
+      } else {
+        html.setAttribute('data-theme', 'dark');
+        localStorage.setItem('spionase-theme', 'dark');
+      }
+    }
+  </script>
+
+  <!-- ================= Reading Progress Bar Script ================= -->
+  <script>
+    (function() {
+      const bar = document.getElementById('reading-progress-bar');
+      if (!bar) return;
+
+      function updateProgress() {
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+        const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        bar.style.width = Math.min(progress, 100) + '%';
+      }
+
+      window.addEventListener('scroll', updateProgress, { passive: true });
+      updateProgress();
+    })();
+  </script>
+
+  <!-- ================= Fitur Interaktif LKPD Script ================= -->
+  <script>
+    // ---- Kalkulator Jejak Karbon ----
+    function hitungKarbon() {
+      const km   = parseFloat(document.getElementById('carbonKm').value)   || 0;
+      const kwh  = parseFloat(document.getElementById('carbonKwh').value)  || 0;
+      const meat = parseFloat(document.getElementById('carbonMeat').value) || 0;
+
+      // Faktor emisi sederhana (kg CO2/unit)
+      const emisiKendara = km   * 0.21;   // 0.21 kg CO2/km rata-rata motor/mobil
+      const emisiListrik = kwh  * 0.87;   // 0.87 kg CO2/kWh (grid Indonesia)
+      const emisiDaging  = meat * 3.3;    // 3.3 kg CO2/porsi daging merah
+
+      const total = emisiKendara + emisiListrik + emisiDaging;
+
+      let level, color, tips;
+      if (total < 5) {
+        level = 'Sangat rendah'; color = '#22c55e';
+        tips = 'Luar biasa! Gaya hidup Anda sudah sangat ramah lingkungan.';
+      } else if (total < 12) {
+        level = 'Sedang'; color = '#f59e0b';
+        tips = 'Cukup baik. Coba kurangi konsumsi daging dan gunakan transportasi umum.';
+      } else if (total < 25) {
+        level = 'Tinggi'; color = '#f97316';
+        tips = 'Emisi Anda cukup besar. Pertimbangkan beralih ke kendaraan listrik atau hemat listrik.';
+      } else {
+        level = 'Sangat tinggi'; color = '#ef4444';
+        tips = 'Jejak karbon Anda jauh di atas rata-rata. Segera ambil langkah nyata untuk lingkungan!';
+      }
+
+      const result = document.getElementById('carbonResult');
+      result.style.display = 'block';
+      result.innerHTML = `
+        <div class="carbon-total" style="border-color:${color}">
+          <span class="carbon-total-num" style="color:${color}">${total.toFixed(2)} <small>kg CO₂/hari</small></span>
+          <span class="carbon-level-badge" style="background:${color}">${level}</span>
+        </div>
+        <div class="carbon-breakdown">
+          <span>Kendaraan: <strong>${emisiKendara.toFixed(2)} kg</strong></span>
+          <span>Listrik: <strong>${emisiListrik.toFixed(2)} kg</strong></span>
+          <span>Konsumsi: <strong>${emisiDaging.toFixed(2)} kg</strong></span>
+        </div>
+        <p class="carbon-tips">${tips}</p>
+      `;
+    }
+
+    // ---- Reaksi Emoji ----
+    const reactionCounts = { concerned:0, angry:0, sad:0, hopeful:0, aware:0, act:0 };
+    let totalReactions = 0;
+
+    function addReaction(type, btn) {
+      reactionCounts[type]++;
+      totalReactions++;
+      document.getElementById('count-' + type).textContent = reactionCounts[type];
+
+      // Visual feedback
+      btn.classList.add('emoji-btn-active');
+      setTimeout(() => btn.classList.remove('emoji-btn-active'), 400);
+
+      const totalEl = document.getElementById('emojiTotal');
+      totalEl.textContent = `Total ${totalReactions} reaksi dari warga digital — terima kasih sudah bersuara!`;
+    }
+
+    // ---- Jajak Pendapat ----
+    const pollData = {
+      industri:   { label: 'Perusahaan industri', votes: 0 },
+      pemerintah: { label: 'Pemerintah', votes: 0 },
+      masyarakat: { label: 'Masyarakat', votes: 0 },
+      bersama:    { label: 'Tanggung jawab bersama', votes: 0 }
+    };
+    let totalVotes = 0;
+
+    function vote(choice) {
+      pollData[choice].votes++;
+      totalVotes++;
+      document.getElementById('pollOptions').style.display = 'none';
+      document.getElementById('pollResetLink').style.display = 'block';
+      renderPollResults();
+    }
+
+    function renderPollResults() {
+      const resultsEl = document.getElementById('pollResults');
+      resultsEl.style.display = 'block';
+      let html = `<p class="poll-total-text">Total suara: <strong>${totalVotes}</strong></p>`;
+      Object.entries(pollData).forEach(([key, data]) => {
+        const pct = totalVotes > 0 ? Math.round((data.votes / totalVotes) * 100) : 0;
+        html += `
+          <div class="poll-result-row">
+            <span class="poll-result-label">${data.label}</span>
+            <div class="poll-bar-wrap">
+              <div class="poll-bar-fill" style="width:${pct}%"></div>
+            </div>
+            <span class="poll-result-pct">${pct}%</span>
+          </div>
+        `;
+      });
+      resultsEl.innerHTML = html;
+    }
+
+    function resetPoll() {
+      document.getElementById('pollOptions').style.display = 'flex';
+      document.getElementById('pollResults').style.display = 'none';
+      document.getElementById('pollResetLink').style.display = 'none';
+    }
+  </script>
+
 </body>
 </html>

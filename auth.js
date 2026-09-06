@@ -17,7 +17,7 @@ function initLocalAuth() {
         password: 'password123',
         role: 'Pembaca',
         phone: '+62 812 3456 7890',
-        bio: 'Penggemar berita teknologi, kecerdasan buatan, dan sains antariksa.',
+        bio: 'Pembaca isu lingkungan, kebijakan publik, dan inovasi berkelanjutan.',
         avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
         joinedDate: '23 Oktober 2026'
       }
