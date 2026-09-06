@@ -1,578 +1,694 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agriswara - Agricultural Articles</title>
-    <style>
-        /* CSS reset and variables */
-        :root {
-            --primary-color: #8cc63f; /* Light green */
-            --text-dark: #333;
-            --text-light: #fff;
-            --bg-light: #f9f9f9;
-            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: var(--font-family);
-            color: var(--text-dark);
-            line-height: 1.6;
-        }
-
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        ul {
-            list-style: none;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* Header */
-        header {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            padding: 20px 0;
-            z-index: 10;
-            color: var(--text-light);
-        }
-
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        nav ul {
-            display: flex;
-            gap: 30px;
-        }
-
-        .auth-buttons {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
-
-        .sign-up-btn {
-            background: var(--text-light);
-            color: var(--text-dark);
-            padding: 8px 20px;
-            border-radius: 20px;
-            font-weight: bold;
-        }
-
-        /* Hero Section */
-        .hero {
-            height: 80vh;
-            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;
-            display: flex;
-            align-items: center;
-            color: var(--text-light);
-            position: relative;
-        }
-
-        .hero-content {
-            max-width: 800px;
-        }
-
-        .hero h1 {
-            font-size: 56px;
-            line-height: 1.2;
-            margin-bottom: 30px;
-        }
-
-        .search-bar {
-            display: flex;
-            background: var(--text-light);
-            border-radius: 30px;
-            padding: 5px;
-            width: max-content;
-        }
-
-        .search-bar input {
-            border: none;
-            padding: 10px 20px;
-            border-radius: 30px;
-            outline: none;
-            width: 300px;
-        }
-
-        .search-bar button {
-            background: var(--primary-color);
-            color: var(--text-light);
-            border: none;
-            padding: 10px 25px;
-            border-radius: 30px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        
-        .explore-more {
-            position: absolute;
-            bottom: 30px;
-            right: 50px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 14px;
-        }
-
-        /* Sections General */
-        section {
-            padding: 80px 0;
-        }
-
-        .section-title {
-            font-size: 32px;
-            margin-bottom: 40px;
-        }
-
-        /* Popular Articles */
-        .popular-articles {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-        }
-
-        .featured-article img {
-            width: 100%;
-            height: 400px;
-            object-fit: cover;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-        
-        .article-date {
-            font-size: 12px;
-            color: #777;
-            margin-bottom: 10px;
-            display: block;
-        }
-
-        .featured-article h3 {
-            font-size: 28px;
-            margin-bottom: 15px;
-        }
-        
-        .featured-article p {
-            color: #555;
-        }
-
-        .side-articles {
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-        }
-
-        .side-article {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-        }
-
-        .side-article img {
-            width: 150px;
-            height: 120px;
-            object-fit: cover;
-            border-radius: 10px;
-        }
-        
-        .side-article-content h4 {
-            font-size: 18px;
-            margin-top: 5px;
-        }
-
-        /* Latest Articles */
-        .latest-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 30px;
-        }
-
-        .latest-card img {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-
-        .latest-card h4 {
-            font-size: 20px;
-            margin-bottom: 10px;
-        }
-        
-        .latest-card p {
-            font-size: 14px;
-            color: #666;
-        }
-
-        /* Pagination */
-        .pagination {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 50px;
-        }
-        
-        .page-numbers {
-            display: flex;
-            gap: 15px;
-        }
-        
-        .page-btn {
-            padding: 10px 20px;
-            border: 1px solid #ddd;
-            border-radius: 30px;
-            background: none;
-            cursor: pointer;
-        }
-        
-        .page-numbers span {
-            width: 35px;
-            height: 35px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            cursor: pointer;
-        }
-        
-        .page-numbers span.active {
-            background: #e8f5e9;
-            color: var(--primary-color);
-            font-weight: bold;
-        }
-
-        /* CTA Section */
-        .cta-section {
-            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;
-            padding: 100px 0;
-            text-align: center;
-            color: var(--text-light);
-        }
-
-        .cta-section h2 {
-            font-size: 48px;
-            margin-bottom: 40px;
-        }
-
-        .cta-form {
-            display: flex;
-            justify-content: center;
-        }
-        
-        .cta-form .search-bar input {
-            width: 400px;
-        }
-
-        /* Footer */
-        footer {
-            padding: 80px 0 40px;
-            background: var(--text-light);
-        }
-
-        .footer-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
-            gap: 30px;
-            margin-bottom: 60px;
-        }
-
-        .footer-logo {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .footer-address {
-            color: #666;
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
-
-        .footer-socials {
-            display: flex;
-            gap: 15px;
-        }
-
-        .footer-col h5 {
-            font-size: 16px;
-            margin-bottom: 20px;
-        }
-
-        .footer-col ul {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .footer-col a {
-            color: #666;
-            font-size: 14px;
-        }
-
-        .footer-bottom {
-            display: flex;
-            justify-content: space-between;
-            padding-top: 30px;
-            border-top: 1px solid #eee;
-            font-size: 14px;
-            color: #888;
-        }
-        
-        .footer-links {
-            display: flex;
-            gap: 20px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spionase Kelompok 3 - Portal Berita & Artikel Terkini</title>
+  <!-- External CSS -->
+  <link rel="stylesheet" href="style.css">
+  <!-- Supabase JS Client Library via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Supabase Configuration -->
+  <script src="supabase-config.js"></script>
+  <!-- Dark Mode early-init: apply saved theme before paint to prevent flash -->
+  <script>
+    (function() {
+      const saved = localStorage.getItem('spionase-theme');
+      if (saved === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
 </head>
 <body>
 
-    <!-- Header -->
-    <header>
-        <div class="header-content">
-            <div class="logo">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM11 19.93C7.05 19.43 4 16.05 4 12C4 7.95 7.05 4.57 11 4.07V19.93ZM13 4.07C16.95 4.57 20 7.95 20 12C20 16.05 16.95 19.43 13 19.93V4.07Z" fill="white"/>
-                </svg>
-                Agriswara
-            </div>
-            <nav>
-                <ul>
-                    <li><a href="#">Articles v</a></li>
-                    <li><a href="#">Category v</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">About Us</a></li>
-                    <li><a href="#">Contact</a></li>
-                </ul>
-            </nav>
-            <div class="auth-buttons">
-                <a href="#" class="sign-in">Sign In</a>
-                <a href="#" class="sign-up-btn">Sign Up</a>
-            </div>
-        </div>
-    </header>
+  <!-- Reading Progress Bar -->
+  <div id="reading-progress-bar"></div>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h1>Utilization of Technology to Support Environmentally Friendly Agriculture</h1>
-                <div class="search-bar">
-                    <input type="text" placeholder="Search articles...">
-                    <button>Search</button>
-                </div>
-            </div>
-            <div class="explore-more">
-                Explore More <span>&rarr;</span>
-            </div>
-        </div>
-    </section>
+  <!-- ================= Header & Interactive Navigation ================= -->
+  <header class="header">
+    <div class="container header-container">
+      <a href="index.html" class="logo">
+        <svg class="logo-icon" viewBox="0 0 24 24">
+          <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM11 19.93C7.05 19.43 4 16.05 4 12C4 7.95 7.05 4.57 11 4.07V19.93ZM13 4.07C16.95 4.57 20 7.95 20 12C20 16.05 16.95 19.43 13 19.93V4.07Z"/>
+        </svg>
+        <span>Spionase <span class="logo-accent">Kelompok 3</span></span>
+      </a>
 
-    <!-- Popular Articles -->
-    <section class="container">
-        <h2 class="section-title">Popular Articles</h2>
-        <div class="popular-articles">
-            <div class="featured-article">
-                <img src="https://images.unsplash.com/photo-1550989460-0adf9ea622e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Orange on tree">
-                <span class="article-date">October 23, 2023</span>
-                <h3>Best Strategy to Achieve Profitable Harvest.</h3>
-                <p>Optimal strategies for achieving profitable harvests involve a comprehensive approach to farm management, selection of appropriate crop varieties, implementation of efficient practices.</p>
-            </div>
-            <div class="side-articles">
-                <div class="side-article">
-                    <img src="https://images.unsplash.com/photo-1595856724647-8a39a2f72bc0?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Carrots">
-                    <div class="side-article-content">
-                        <span class="article-date">October 23, 2023</span>
-                        <h4>Abundant Harvest from Agricultural Farm Land Shows Success.</h4>
-                    </div>
-                </div>
-                <div class="side-article">
-                    <img src="https://images.unsplash.com/photo-1596733430284-f7437764b1a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Cows">
-                    <div class="side-article-content">
-                        <span class="article-date">October 23, 2023</span>
-                        <h4>Latest Innovations Increasing Milk Production and Quality.</h4>
-                    </div>
-                </div>
-                <div class="side-article">
-                    <img src="https://images.unsplash.com/photo-1610348725531-843dff563e2c?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Vegetables">
-                    <div class="side-article-content">
-                        <span class="article-date">October 23, 2023</span>
-                        <h4>Best Practices in Harvesting Vegetables from Plantations.</h4>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Latest Articles -->
-    <section class="container">
-        <h2 class="section-title">Latest Articles</h2>
-        <div class="latest-grid">
-            <div class="latest-card">
-                <img src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Tractor in field">
-                <span class="article-date">October 23, 2023</span>
-                <h4>Exploring Potential and Challenges in Global Agriculture.</h4>
-                <p>Uncovering the Vast Potential and Complex Challenges in the World of Global Agriculture.</p>
-            </div>
-            <div class="latest-card">
-                <img src="https://images.unsplash.com/photo-1500595046743-cd271d694d30?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Red barn">
-                <span class="article-date">October 23, 2023</span>
-                <h4>Bringing Change in the Livestock Industry.</h4>
-                <p>Revealing Innovations, Challenges and Transformation Potential that Bring Positive.</p>
-            </div>
-            <div class="latest-card">
-                <img src="https://images.unsplash.com/photo-1560806887-1e4cd0b6bcc6?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Apples">
-                <span class="article-date">October 23, 2023</span>
-                <h4>Potential and Constraints Faced in Production Quality.</h4>
-                <p>Discusses Challenges and Opportunities in Achieving High Production Standards.</p>
-            </div>
-            <div class="latest-card">
-                <img src="https://images.unsplash.com/photo-1592841200221-a6898f307baa?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Tomatoes">
-                <span class="article-date">October 23, 2023</span>
-                <h4>Achieving High Productivity from Your Own Home Garden.</h4>
-                <p>A Practical Guide to Achieving Satisfactory Results from Plants Grown in Your Home.</p>
-            </div>
-            <div class="latest-card">
-                <img src="https://images.unsplash.com/photo-1416879598555-220f890289a4?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Planting seed">
-                <span class="article-date">October 23, 2023</span>
-                <h4>The Best Guide to Planting Seeds with Optimal Results.</h4>
-                <p>Effective Strategies and Techniques to Achieve Healthy and Productive Plant Growth.</p>
-            </div>
-            <div class="latest-card">
-                <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Silos">
-                <span class="article-date">October 23, 2023</span>
-                <h4>Strategies for Caring for Your Garden More Efficiently and Productively.</h4>
-                <p>An approach that improves plant performance and makes garden management easier.</p>
-            </div>
+      <!-- Interactive Functional Navigation -->
+      <nav class="nav-links">
+        <!-- Kategori Dropdown -->
+        <div class="nav-item-dropdown">
+          <button type="button" class="nav-link">
+            Kategori
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="nav-dropdown-menu">
+            <button type="button" class="dropdown-link-item" onclick="applyCategoryFilter('EKO-KIMIA')">Eko-Kimia</button>
+            <button type="button" class="dropdown-link-item" onclick="applyCategoryFilter('PPKN')">Regulasi &amp; PPKn</button>
+            <button type="button" class="dropdown-link-item" onclick="applyCategoryFilter('SOLUSI DIGITAL')">Solusi Digital</button>
+            <button type="button" class="dropdown-link-item" onclick="applyCategoryFilter('EKO-INOVASI')">Eko-Inovasi</button>
+          </div>
         </div>
 
-        <div class="pagination">
-            <button class="page-btn">&larr; Previous</button>
-            <div class="page-numbers">
-                <span class="active">1</span>
-                <span>2</span>
-                <span>3</span>
-                <span>4</span>
-                <span>5</span>
-                <span>...</span>
-            </div>
-            <button class="page-btn">Next &rarr;</button>
+        <!-- Topik Pilihan Dropdown -->
+        <div class="nav-item-dropdown">
+          <button type="button" class="nav-link">
+            Topik Pilihan
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="nav-dropdown-menu">
+            <button type="button" class="dropdown-link-item" onclick="showTopic('popular')">Artikel Pilihan</button>
+            <button type="button" class="dropdown-link-item" onclick="showTopic('latest')">Artikel Terbaru</button>
+            <button type="button" class="dropdown-link-item" onclick="applyCategoryFilter('ALL')">Semua Kategori</button>
+          </div>
         </div>
-    </section>
 
-    <!-- CTA Section -->
-    <section class="cta-section">
-        <div class="container">
-            <h2>Get involved in the<br>agricultural uprising</h2>
-            <div class="cta-form">
-                <div class="search-bar">
-                    <input type="email" placeholder="Type your email address">
-                    <button>Join Now</button>
-                </div>
-            </div>
-        </div>
-    </section>
+        <button type="button" class="nav-link" onclick="showTopic('popular')">Populer</button>
+        <button type="button" class="nav-link" onclick="showTopic('latest')">Terbaru</button>
+        <a href="#interaktif" class="nav-link">Interaktif</a>
+      </nav>
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-col">
-                    <div class="footer-logo">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM11 19.93C7.05 19.43 4 16.05 4 12C4 7.95 7.05 4.57 11 4.07V19.93ZM13 4.07C16.95 4.57 20 7.95 20 12C20 16.05 16.95 19.43 13 19.93V4.07Z" fill="#333"/>
-                        </svg>
-                        Agriswara
-                    </div>
-                    <p class="footer-address">
-                        Rajawali street No 45, Magelang<br>
-                        Town City, Central Java 6723<br>
-                        Indonesia
-                    </p>
-                    <div class="footer-socials">
-                        <a href="#">In</a>
-                        <a href="#">Tw</a>
-                        <a href="#">Fb</a>
-                    </div>
-                </div>
-                <div class="footer-col">
-                    <h5>Company Category</h5>
-                    <ul>
-                        <li><a href="#">Agribusiness</a></li>
-                        <li><a href="#">Financial Services</a></li>
-                        <li><a href="#">IoT Service Provider</a></li>
-                        <li><a href="#">Educational Institutions</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h5>Individual Category</h5>
-                    <ul>
-                        <li><a href="#">Cultivator</a></li>
-                        <li><a href="#">Agricultural Consumers</a></li>
-                        <li><a href="#">Agricultural Expert</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h5>Services</h5>
-                    <ul>
-                        <li><a href="#">Partner</a></li>
-                        <li><a href="#">Capital</a></li>
-                        <li><a href="#">Market</a></li>
-                        <li><a href="#">Smart Farming</a></li>
-                        <li><a href="#">Agripedia</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h5>Company</h5>
-                    <ul>
-                        <li><a href="#">About Us</a></li>
-                        <li><a href="#">Blog</a></li>
-                        <li><a href="#">FAQ</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2024 Agriswara. All right reserved</p>
-                <div class="footer-links">
-                    <a href="#">Privacy Policy</a>
-                    <a href="#">Terms Of Use</a>
-                </div>
-            </div>
+      <!-- Dark/Light Mode Toggle -->
+      <button
+        type="button"
+        class="theme-toggle-btn"
+        id="themeToggleBtn"
+        onclick="toggleTheme()"
+        aria-label="Toggle Dark/Light Mode"
+        title="Toggle Dark/Light Mode"
+      >
+        <!-- Sun icon (light mode) -->
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <!-- Moon icon (dark mode) -->
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+
+      <div class="header-auth">
+        <a href="auth.html?mode=signin" class="btn-sign-in">Sign In</a>
+        <a href="auth.html?mode=signup" class="btn-sign-up">Sign Up</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= Hero Section ================= -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <h1 class="hero-title">Literasi Lingkungan Digital: Kimia, Ekologi, dan Hak Warga dalam Era Informasi</h1>
+        <div class="hero-search-wrapper">
+          <form class="search-box" onsubmit="handleSearchSubmit(event)">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="mainSearchInput" placeholder="Cari artikel berita, teknologi, tren..." oninput="handleLiveSearch(this.value)">
+            <button type="submit" class="btn-search">
+              <span>Cari</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </button>
+          </form>
         </div>
-    </footer>
+      </div>
+    </div>
+    <a href="#articleFeedArea" class="hero-explore" onclick="scrollToArticles(event)">
+      <span>Jelajahi Berita</span>
+      <div class="arrow-circle">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <polyline points="19 12 12 19 5 12"></polyline>
+        </svg>
+      </div>
+    </a>
+  </section>
+
+  <!-- ================= Interactive Category Filter Pill Bar ================= -->
+  <div class="category-filter-section" id="articleFeedArea">
+    <div class="container category-filter-container">
+      <div class="category-filter-pills">
+        <button type="button" class="filter-pill active" onclick="applyCategoryFilter('ALL', this)">Semua Berita</button>
+        <button type="button" class="filter-pill" onclick="applyCategoryFilter('EKO-KIMIA', this)">Eko-Kimia</button>
+        <button type="button" class="filter-pill" onclick="applyCategoryFilter('PPKN', this)">Regulasi &amp; PPKn</button>
+        <button type="button" class="filter-pill" onclick="applyCategoryFilter('SOLUSI DIGITAL', this)">Solusi Digital</button>
+        <button type="button" class="filter-pill" onclick="applyCategoryFilter('EKO-INOVASI', this)">Eko-Inovasi</button>
+      </div>
+
+      <div class="filter-status-text" id="filterStatusLabel">
+        Menampilkan: <strong>Semua Artikel (9)</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= Popular Articles Section ================= -->
+  <section class="section" id="popularSection">
+    <div class="container">
+      <h2 class="section-title" id="popularTitle">Artikel Pilihan: Krisis Lingkungan</h2>
+      
+      <div class="popular-grid" id="popularGrid">
+        <!-- Main Featured Article (Topik 1 Kimia — Tumpahan Minyak Karawang) -->
+        <a href="article.html?id=1" class="article-link article-item" data-category="EKO-KIMIA" data-title="Tumpahan Minyak Karawang Mengancam Ekosistem Laut dan Kehidupan Warga Pesisir">
+          <article class="featured-card">
+            <div class="featured-img-wrap">
+              <img src="https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?auto=format&fit=crop&w=900&q=80" alt="Tumpahan Minyak Karawang">
+            </div>
+            <span class="article-date">EKO-KIMIA • 23 OKTOBER 2026</span>
+            <h3 class="featured-title">Tumpahan Minyak Karawang: Ketika Senyawa Hidrokarbon Merenggut Hak Hidup Warga Pesisir.</h3>
+            <p class="featured-desc">Tumpahan minyak di perairan Karawang memperlihatkan bagaimana hidrokarbon dapat mengganggu ekosistem laut, kegiatan nelayan, dan rasa aman warga pesisir.</p>
+          </article>
+        </a>
+
+        <!-- Side Stacked Articles -->
+        <div class="side-articles-list">
+          <!-- Topik 2: Oli Bekas -->
+          <a href="article.html?id=2" class="article-link article-item" data-category="EKO-KIMIA" data-title="Bahaya Buang Oli Bekas Sembarangan Ancaman Nyata Pencemaran Tanah dan Air Tanah">
+            <article class="side-card">
+              <div class="side-img-wrap">
+                <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=400&q=80" alt="Oli Bekas Berbahaya">
+              </div>
+              <div class="side-content">
+                <span class="article-date">EKO-KIMIA • 23 OKTOBER 2026</span>
+                <h4 class="side-title">Bahaya Buang Oli Bekas Sembarangan: Ancaman Nyata bagi Tanah dan Air Tanah.</h4>
+                <p class="side-desc">Oli bekas membawa kontaminan dari pemakaian kendaraan. Pengumpulan dan penyerahan ke pengelola berizin mencegah limbah masuk ke tanah atau saluran air.</p>
+              </div>
+            </article>
+          </a>
+
+          <!-- Topik 3: Mikroplastik -->
+          <a href="article.html?id=3" class="article-link article-item" data-category="EKO-KIMIA" data-title="Ancaman Mikroplastik dalam Rantai Makanan Laut Krisis Senyawa Kimia Tak Kasat Mata">
+            <article class="side-card">
+              <div class="side-img-wrap">
+                <img src="https://images.unsplash.com/photo-1604187351574-c75ca79f5807?auto=format&fit=crop&w=400&q=80" alt="Mikroplastik di Laut">
+              </div>
+              <div class="side-content">
+                <span class="article-date">EKO-KIMIA • 23 OKTOBER 2026</span>
+                <h4 class="side-title">Ancaman Mikroplastik dalam Rantai Makanan Laut: Krisis Senyawa Kimia Tak Kasat Mata.</h4>
+                <p class="side-desc">Partikel plastik berukuran hingga lima milimeter dapat masuk ke ekosistem dan rantai pangan. Dampak kesehatan spesifiknya masih terus diteliti.</p>
+              </div>
+            </article>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Latest Articles Section ================= -->
+  <section class="section latest-section" id="latestSection">
+    <div class="container">
+      <h2 class="section-title" id="latestTitle">Artikel Terbaru: Hak, Nilai, &amp; Solusi</h2>
+
+      <div class="latest-grid" id="latestGrid">
+        <!-- Card 1 — PPKn: Hak Lingkungan Sehat UUD 1945 Pasal 28H -->
+        <a href="article.html?id=4" class="article-link article-item" data-category="PPKN" data-title="Hak atas Lingkungan Hidup Sehat Amanat UUD 1945 Pasal 28H Ayat 1 yang Kerap Diabaikan">
+          <article class="latest-card">
+            <div class="latest-img-wrap">
+              <img src="https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&w=600&q=80" alt="Hak Konstitusional Lingkungan">
+            </div>
+            <span class="article-date">REGULASI &amp; PPKN • 23 OKTOBER 2026</span>
+            <h4 class="latest-title">Hak atas Lingkungan Sehat: Amanat UUD 1945 Pasal 28H Ayat 1 yang Kerap Diabaikan.</h4>
+            <p class="latest-desc">Pasal 28H ayat (1) UUD 1945 menegaskan hak atas lingkungan yang baik dan sehat, sekaligus dasar untuk pengawasan dan perlindungan warga.</p>
+          </article>
+        </a>
+
+        <!-- Card 2 — PPKn: Gotong Royong Sila 3 -->
+        <a href="article.html?id=5" class="article-link article-item" data-category="PPKN" data-title="Gotong Royong Kelestarian Alam Implementasi Sila Ketiga dalam Gerakan Lingkungan">
+          <article class="latest-card">
+            <div class="latest-img-wrap">
+              <img src="https://images.unsplash.com/photo-1530587191325-3db32d826c18?auto=format&fit=crop&w=600&q=80" alt="Gotong Royong Lingkungan">
+            </div>
+            <span class="article-date">REGULASI &amp; PPKN • 23 OKTOBER 2026</span>
+            <h4 class="latest-title">Gotong Royong Kelestarian Alam: Implementasi Sila Ketiga dalam Gerakan Lingkungan.</h4>
+            <p class="latest-desc">Sila Ketiga hadir dalam tindakan bersama, dari pemilahan sampah hingga pemantauan sungai, karena ruang hidup yang sehat tidak bisa dijaga sendirian.</p>
+          </article>
+        </a>
+
+        <!-- Card 3 — PPKn: Musyawarah Energi Bersih Sila 4 & 5 -->
+        <a href="article.html?id=6" class="article-link article-item" data-category="PPKN" data-title="Musyawarah Keadilan Energi Bersih Implementasi Sila Keempat dan Kelima Pancasila">
+          <article class="latest-card">
+            <div class="latest-img-wrap">
+              <img src="https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=600&q=80" alt="Energi Bersih dan Keadilan">
+            </div>
+            <span class="article-date">REGULASI &amp; PPKN • 23 OKTOBER 2026</span>
+            <h4 class="latest-title">Musyawarah Keadilan Energi Bersih: Implementasi Sila 4 &amp; 5 Pancasila.</h4>
+            <p class="latest-desc">Musyawarah membuat transisi energi bersih lebih inklusif. Sila Keempat dan Kelima mengarahkan keputusan pada keterlibatan warga serta manfaat yang adil.</p>
+          </article>
+        </a>
+
+        <!-- Card 4 — Solusi Digital: Kalkulator Emisi -->
+        <a href="article.html?id=7" class="article-link article-item" data-category="SOLUSI DIGITAL" data-title="Inovasi Aplikasi Kalkulator Jejak Karbon untuk Mendorong Gaya Hidup Rendah Emisi">
+          <article class="latest-card">
+            <div class="latest-img-wrap">
+              <img src="https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&w=600&q=80" alt="Teknologi Lingkungan">
+            </div>
+            <span class="article-date">SOLUSI DIGITAL • 23 OKTOBER 2026</span>
+            <h4 class="latest-title">Inovasi Aplikasi Kalkulator Jejak Karbon untuk Mendorong Gaya Hidup Rendah Emisi.</h4>
+            <p class="latest-desc">Kalkulator digital membantu warga memperkirakan emisi dari transportasi, listrik, dan konsumsi, lalu memilih langkah pengurangan yang realistis.</p>
+          </article>
+        </a>
+
+        <!-- Card 5 — Eko-Inovasi: Bioremediasi -->
+        <a href="article.html?id=8" class="article-link article-item" data-category="EKO-INOVASI" data-title="Bioremediasi Solusi Bioteknologi untuk Memulihkan Tanah dan Perairan Tercemar Minyak">
+          <article class="latest-card">
+            <div class="latest-img-wrap">
+              <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=600&q=80" alt="Bioremediasi Alam">
+            </div>
+            <span class="article-date">EKO-INOVASI • 23 OKTOBER 2026</span>
+            <h4 class="latest-title">Bioremediasi: Solusi Bioteknologi untuk Memulihkan Tanah &amp; Perairan Tercemar Minyak.</h4>
+            <p class="latest-desc">Bioremediasi memanfaatkan mikroorganisme untuk membantu pemulihan pencemaran minyak, dengan syarat penilaian lokasi dan pemantauan ilmiah yang ketat.</p>
+          </article>
+        </a>
+
+        <!-- Card 6 — Eko-Inovasi: Plastik Daur Ulang -->
+        <a href="article.html?id=9" class="article-link article-item" data-category="EKO-INOVASI" data-title="Inovasi Material Bioplastik Menggantikan Plastik Konvensional Sumber Mikroplastik">
+          <article class="latest-card">
+            <div class="latest-img-wrap">
+              <img src="https://images.unsplash.com/photo-1558449028-b53a39d100fc?auto=format&fit=crop&w=600&q=80" alt="Bioplastik Inovatif">
+            </div>
+            <span class="article-date">EKO-INOVASI • 23 OKTOBER 2026</span>
+            <h4 class="latest-title">Inovasi Material Bioplastik: Menggantikan Plastik Konvensional Sumber Mikroplastik.</h4>
+            <p class="latest-desc">Material alternatif dapat mengurangi ketergantungan pada plastik konvensional, tetapi manfaatnya tetap bergantung pada desain produk dan sistem pengelolaan pasca-pakai.</p>
+          </article>
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= CTA Section ================= -->
+  <section class="cta-banner" id="newsletter">
+    <div class="container">
+      <h2 class="cta-title">Dapatkan Rangkuman Berita<br>&amp; Artikel Terkini Setiap Hari</h2>
+      
+      <div class="cta-form-wrapper">
+        <form class="cta-form" action="#" method="post" onsubmit="event.preventDefault(); alert('Terima kasih! Anda telah berlangganan newsletter Spionase Kelompok 3.');">
+          <input type="email" placeholder="Masukkan alamat email Anda" required>
+          <button type="submit" class="btn-join">
+            <span>Langganan</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Fitur Interaktif LKPD ================= -->
+  <section class="section interactive-section" id="interaktif">
+    <div class="container">
+      <h2 class="section-title">Ruang Interaktif Warga Digital</h2>
+      <p class="interactive-intro">Wadah dialog digital Spionase Kelompok 3 untuk mengukur dampak, menyampaikan reaksi, dan menyuarakan pendapat tentang isu lingkungan.</p>
+
+      <div class="interactive-grid">
+
+        <!-- 1. Kalkulator Jejak Karbon -->
+        <div class="interactive-card carbon-calc-card">
+          <div class="icard-header">
+            <span class="icard-index">01</span>
+            <h3 class="icard-title">Kalkulator Jejak Karbon Mandiri</h3>
+          </div>
+          <p class="icard-desc">Hitung estimasi emisi CO₂ harian Anda berdasarkan aktivitas transportasi dan konsumsi energi.</p>
+
+          <div class="carbon-form">
+            <div class="carbon-row">
+              <label>Jarak berkendara motor atau mobil (km per hari)</label>
+              <input type="number" id="carbonKm" min="0" max="500" value="20" class="carbon-input">
+            </div>
+            <div class="carbon-row">
+              <label>Penggunaan listrik rumah (kWh per hari)</label>
+              <input type="number" id="carbonKwh" min="0" max="100" value="8" class="carbon-input">
+            </div>
+            <div class="carbon-row">
+              <label>Konsumsi daging merah (porsi per hari)</label>
+              <input type="number" id="carbonMeat" min="0" max="10" value="1" class="carbon-input">
+            </div>
+            <button type="button" class="btn-carbon-calc" onclick="hitungKarbon()">Hitung estimasi emisi</button>
+            <div class="carbon-result" id="carbonResult"></div>
+          </div>
+        </div>
+
+        <!-- 2. Reaksi pembaca -->
+        <div class="interactive-card emoji-reaction-card">
+          <div class="icard-header">
+            <span class="icard-index">02</span>
+            <h3 class="icard-title">Reaksi Warga Terhadap Krisis Lingkungan</h3>
+          </div>
+          <p class="icard-desc">Bagaimana perasaan Anda setelah membaca artikel pencemaran lingkungan ini?</p>
+
+          <div class="emoji-grid">
+            <button type="button" class="emoji-btn" onclick="addReaction('concerned', this)">
+              <span class="emoji-icon">😟</span>
+              <span class="emoji-label">Prihatin</span>
+              <span class="emoji-count" id="count-concerned">0</span>
+            </button>
+            <button type="button" class="emoji-btn" onclick="addReaction('angry', this)">
+              <span class="emoji-icon">😠</span>
+              <span class="emoji-label">Tegas</span>
+              <span class="emoji-count" id="count-angry">0</span>
+            </button>
+            <button type="button" class="emoji-btn" onclick="addReaction('sad', this)">
+              <span class="emoji-icon">💧</span>
+              <span class="emoji-label">Sedih</span>
+              <span class="emoji-count" id="count-sad">0</span>
+            </button>
+            <button type="button" class="emoji-btn" onclick="addReaction('hopeful', this)">
+              <span class="emoji-icon">🌱</span>
+              <span class="emoji-label">Optimis</span>
+              <span class="emoji-count" id="count-hopeful">0</span>
+            </button>
+            <button type="button" class="emoji-btn" onclick="addReaction('aware', this)">
+              <span class="emoji-icon">💡</span>
+              <span class="emoji-label">Terinspirasi</span>
+              <span class="emoji-count" id="count-aware">0</span>
+            </button>
+            <button type="button" class="emoji-btn" onclick="addReaction('act', this)">
+              <span class="emoji-icon">✓</span>
+              <span class="emoji-label">Siap bertindak</span>
+              <span class="emoji-count" id="count-act">0</span>
+            </button>
+          </div>
+          <p class="emoji-total-text" id="emojiTotal">Belum ada reaksi. Jadilah yang pertama!</p>
+        </div>
+
+        <!-- 3. Jajak Pendapat Digital -->
+        <div class="interactive-card poll-card">
+          <div class="icard-header">
+            <span class="icard-index">03</span>
+            <h3 class="icard-title">Jajak Pendapat: Suara Warga Terdampak</h3>
+          </div>
+          <p class="icard-desc">Menurut Anda, siapakah yang paling bertanggung jawab atas krisis pencemaran lingkungan di Indonesia?</p>
+
+          <div class="poll-options" id="pollOptions">
+            <button type="button" class="poll-option-btn" onclick="vote('industri')">Perusahaan industri dan korporasi</button>
+            <button type="button" class="poll-option-btn" onclick="vote('pemerintah')">Pemerintah dan pengawas lingkungan</button>
+            <button type="button" class="poll-option-btn" onclick="vote('masyarakat')">Masyarakat dan gaya hidup konsumtif</button>
+            <button type="button" class="poll-option-btn" onclick="vote('bersama')">Tanggung jawab bersama semua pihak</button>
+          </div>
+          <div class="poll-results" id="pollResults" style="display:none;"></div>
+          <p class="poll-reset-link" id="pollResetLink" style="display:none;">
+            <button type="button" onclick="resetPoll()" class="btn-reset-poll">Ubah pilihan</button>
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Compact Minimalist Footer ================= -->
+  <footer class="footer-compact" id="footer">
+    <div class="container footer-compact-inner">
+      <div class="footer-compact-brand">
+        <a href="index.html" class="logo">
+          <svg class="logo-icon" viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM11 19.93C7.05 19.43 4 16.05 4 12C4 7.95 7.05 4.57 11 4.07V19.93ZM13 4.07C16.95 4.57 20 7.95 20 12C20 16.05 16.95 19.43 13 19.93V4.07Z"/>
+          </svg>
+          <span>Spionase Kelompok 3</span>
+        </a>
+        <p>&copy; 2026 Spionase Kelompok 3. Media Literasi Lingkungan &amp; Digital.</p>
+      </div>
+      <div class="footer-compact-links">
+        <button type="button" class="nav-link" style="color: var(--text-muted); font-size:13px;" onclick="showTopic('popular')">Berita Populer</button>
+        <button type="button" class="nav-link" style="color: var(--text-muted); font-size:13px;" onclick="showTopic('latest')">Artikel Terbaru</button>
+        <a href="profile.html">Profil Saya</a>
+        <a href="auth.html?mode=signin">Akun</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Auth Script -->
+  <script src="auth.js"></script>
+
+  <!-- ================= Interactive Filtering & Search Script ================= -->
+  <script>
+    let currentCategory = 'ALL';
+    let currentSearchQuery = '';
+
+    // Scroll helper
+    function scrollToArticles(e) {
+      if (e) e.preventDefault();
+      document.getElementById('articleFeedArea').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Filter by category
+    function applyCategoryFilter(categoryKey, clickedBtn = null) {
+      currentCategory = categoryKey.toUpperCase();
+      
+      // Update active state on filter pills
+      const pills = document.querySelectorAll('.filter-pill');
+      pills.forEach(pill => {
+        const text = pill.textContent.toUpperCase();
+        if (
+          (currentCategory === 'ALL' && text.includes('SEMUA')) ||
+          (currentCategory !== 'ALL' && text.includes(currentCategory.split(' ')[0]))
+        ) {
+          pill.classList.add('active');
+        } else {
+          pill.classList.remove('active');
+        }
+      });
+
+      // Show both popular and latest sections for filtered view
+      document.getElementById('popularSection').style.display = 'block';
+      document.getElementById('latestSection').style.display = 'block';
+
+      renderFilteredArticles();
+      scrollToArticles();
+    }
+
+    // Show specific topic (Popular vs Latest)
+    function showTopic(topicType) {
+      currentCategory = 'ALL';
+      currentSearchQuery = '';
+      document.getElementById('mainSearchInput').value = '';
+
+      if (topicType === 'popular') {
+        document.getElementById('popularSection').style.display = 'block';
+        document.getElementById('latestSection').style.display = 'none';
+        document.getElementById('filterStatusLabel').innerHTML = 'Menampilkan: <strong>Artikel Pilihan (3)</strong>';
+        document.getElementById('popularSection').scrollIntoView({ behavior: 'smooth' });
+      } else if (topicType === 'latest') {
+        document.getElementById('popularSection').style.display = 'none';
+        document.getElementById('latestSection').style.display = 'block';
+        document.getElementById('filterStatusLabel').innerHTML = 'Menampilkan: <strong>Artikel Terbaru (6)</strong>';
+        document.getElementById('latestSection').scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    // Live search input
+    function handleLiveSearch(query) {
+      currentSearchQuery = query.trim().toLowerCase();
+      renderFilteredArticles();
+    }
+
+    function handleSearchSubmit(e) {
+      e.preventDefault();
+      const val = document.getElementById('mainSearchInput').value;
+      handleLiveSearch(val);
+      scrollToArticles();
+    }
+
+    // Filter logic
+    function renderFilteredArticles() {
+      const allArticles = document.querySelectorAll('.article-item');
+      let visibleCount = 0;
+
+      allArticles.forEach(item => {
+        const cat = (item.getAttribute('data-category') || '').toUpperCase();
+        const title = (item.getAttribute('data-title') || '').toLowerCase();
+        const text = item.textContent.toLowerCase();
+
+        const matchCategory = (currentCategory === 'ALL') || cat.includes(currentCategory);
+        const matchSearch = (!currentSearchQuery) || title.includes(currentSearchQuery) || text.includes(currentSearchQuery) || cat.toLowerCase().includes(currentSearchQuery);
+
+        if (matchCategory && matchSearch) {
+          item.style.display = 'block';
+          visibleCount++;
+        } else {
+          item.style.display = 'none';
+        }
+      });
+
+      // Update status text
+      const statusLabel = document.getElementById('filterStatusLabel');
+
+      if (currentCategory === 'ALL' && !currentSearchQuery) {
+        statusLabel.innerHTML = `Menampilkan: <strong>Semua Artikel (${visibleCount})</strong>`;
+      } else {
+        const label = currentCategory !== 'ALL' ? currentCategory : `Pencarian "${currentSearchQuery}"`;
+        statusLabel.innerHTML = `Hasil Kategori <strong>${label}</strong>: (${visibleCount} artikel)`;
+      }
+
+      if (visibleCount === 0) statusLabel.innerHTML = 'Belum ada artikel yang sesuai dengan pencarian tersebut.';
+    }
+
+    // Check query params on page load (e.g. index.html?category=TEKNOLOGI)
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const catParam = urlParams.get('category');
+      const qParam = urlParams.get('q');
+
+      if (catParam) {
+        applyCategoryFilter(catParam);
+      } else if (qParam) {
+        document.getElementById('mainSearchInput').value = qParam;
+        handleLiveSearch(qParam);
+      }
+    });
+  </script>
+
+  <!-- ================= Dark/Light Mode Toggle Script ================= -->
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const isDark = html.getAttribute('data-theme') === 'dark';
+      if (isDark) {
+        html.removeAttribute('data-theme');
+        localStorage.setItem('spionase-theme', 'light');
+      } else {
+        html.setAttribute('data-theme', 'dark');
+        localStorage.setItem('spionase-theme', 'dark');
+      }
+    }
+  </script>
+
+  <!-- ================= Reading Progress Bar Script ================= -->
+  <script>
+    (function() {
+      const bar = document.getElementById('reading-progress-bar');
+      if (!bar) return;
+
+      function updateProgress() {
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+        const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        bar.style.width = Math.min(progress, 100) + '%';
+      }
+
+      window.addEventListener('scroll', updateProgress, { passive: true });
+      updateProgress();
+    })();
+  </script>
+
+  <!-- ================= Fitur Interaktif LKPD Script ================= -->
+  <script>
+    // ---- Kalkulator Jejak Karbon ----
+    function hitungKarbon() {
+      const km   = parseFloat(document.getElementById('carbonKm').value)   || 0;
+      const kwh  = parseFloat(document.getElementById('carbonKwh').value)  || 0;
+      const meat = parseFloat(document.getElementById('carbonMeat').value) || 0;
+
+      // Faktor emisi sederhana (kg CO2/unit)
+      const emisiKendara = km   * 0.21;   // 0.21 kg CO2/km rata-rata motor/mobil
+      const emisiListrik = kwh  * 0.87;   // 0.87 kg CO2/kWh (grid Indonesia)
+      const emisiDaging  = meat * 3.3;    // 3.3 kg CO2/porsi daging merah
+
+      const total = emisiKendara + emisiListrik + emisiDaging;
+
+      let level, color, tips;
+      if (total < 5) {
+        level = 'Sangat rendah'; color = '#22c55e';
+        tips = 'Luar biasa! Gaya hidup Anda sudah sangat ramah lingkungan.';
+      } else if (total < 12) {
+        level = 'Sedang'; color = '#f59e0b';
+        tips = 'Cukup baik. Coba kurangi konsumsi daging dan gunakan transportasi umum.';
+      } else if (total < 25) {
+        level = 'Tinggi'; color = '#f97316';
+        tips = 'Emisi Anda cukup besar. Pertimbangkan beralih ke kendaraan listrik atau hemat listrik.';
+      } else {
+        level = 'Sangat tinggi'; color = '#ef4444';
+        tips = 'Jejak karbon Anda jauh di atas rata-rata. Segera ambil langkah nyata untuk lingkungan!';
+      }
+
+      const result = document.getElementById('carbonResult');
+      result.style.display = 'block';
+      result.innerHTML = `
+        <div class="carbon-total" style="border-color:${color}">
+          <span class="carbon-total-num" style="color:${color}">${total.toFixed(2)} <small>kg CO₂/hari</small></span>
+          <span class="carbon-level-badge" style="background:${color}">${level}</span>
+        </div>
+        <div class="carbon-breakdown">
+          <span>Kendaraan: <strong>${emisiKendara.toFixed(2)} kg</strong></span>
+          <span>Listrik: <strong>${emisiListrik.toFixed(2)} kg</strong></span>
+          <span>Konsumsi: <strong>${emisiDaging.toFixed(2)} kg</strong></span>
+        </div>
+        <p class="carbon-tips">${tips}</p>
+      `;
+    }
+
+    // ---- Reaksi Emoji ----
+    const reactionCounts = { concerned:0, angry:0, sad:0, hopeful:0, aware:0, act:0 };
+    let totalReactions = 0;
+
+    function addReaction(type, btn) {
+      reactionCounts[type]++;
+      totalReactions++;
+      document.getElementById('count-' + type).textContent = reactionCounts[type];
+
+      // Visual feedback
+      btn.classList.add('emoji-btn-active');
+      setTimeout(() => btn.classList.remove('emoji-btn-active'), 400);
+
+      const totalEl = document.getElementById('emojiTotal');
+      totalEl.textContent = `Total ${totalReactions} reaksi dari warga digital — terima kasih sudah bersuara!`;
+    }
+
+    // ---- Jajak Pendapat ----
+    const pollData = {
+      industri:   { label: 'Perusahaan industri', votes: 0 },
+      pemerintah: { label: 'Pemerintah', votes: 0 },
+      masyarakat: { label: 'Masyarakat', votes: 0 },
+      bersama:    { label: 'Tanggung jawab bersama', votes: 0 }
+    };
+    let totalVotes = 0;
+
+    function vote(choice) {
+      pollData[choice].votes++;
+      totalVotes++;
+      document.getElementById('pollOptions').style.display = 'none';
+      document.getElementById('pollResetLink').style.display = 'block';
+      renderPollResults();
+    }
+
+    function renderPollResults() {
+      const resultsEl = document.getElementById('pollResults');
+      resultsEl.style.display = 'block';
+      let html = `<p class="poll-total-text">Total suara: <strong>${totalVotes}</strong></p>`;
+      Object.entries(pollData).forEach(([key, data]) => {
+        const pct = totalVotes > 0 ? Math.round((data.votes / totalVotes) * 100) : 0;
+        html += `
+          <div class="poll-result-row">
+            <span class="poll-result-label">${data.label}</span>
+            <div class="poll-bar-wrap">
+              <div class="poll-bar-fill" style="width:${pct}%"></div>
+            </div>
+            <span class="poll-result-pct">${pct}%</span>
+          </div>
+        `;
+      });
+      resultsEl.innerHTML = html;
+    }
+
+    function resetPoll() {
+      document.getElementById('pollOptions').style.display = 'flex';
+      document.getElementById('pollResults').style.display = 'none';
+      document.getElementById('pollResetLink').style.display = 'none';
+    }
+  </script>
 
 </body>
 </html>
-
