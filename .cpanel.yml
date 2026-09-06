@@ -1,0 +1,5 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/sernewge/satekgacor.my.id
+    - /bin/cp -r * $DEPLOYPATH
